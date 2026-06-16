@@ -1,0 +1,96 @@
+[
+  {
+    "id": "bioswale",
+    "name": "Bioswale",
+    "minCapturePercent": 0.12,
+    "maxCapturePercent": 0.28,
+    "minPeakFlowReductionPercent": 18,
+    "maxPeakFlowReductionPercent": 45,
+    "bestFor": ["road edges", "curb runoff", "linear rights-of-way", "parking lot edges"],
+    "notGoodFor": ["very steep slopes", "contaminated soils without pretreatment", "tight sidewalks with utilities"],
+    "maintenanceNeeds": "Remove sediment and trash, maintain vegetation, inspect inlets after storms.",
+    "sourceNote": "Source-backed planning range from EPA green infrastructure guidance and stormwater practice design references; calibrate locally before engineering use."
+  },
+  {
+    "id": "rain-garden",
+    "name": "Rain Garden",
+    "minCapturePercent": 0.10,
+    "maxCapturePercent": 0.24,
+    "minPeakFlowReductionPercent": 14,
+    "maxPeakFlowReductionPercent": 38,
+    "bestFor": ["small drainage areas", "parks", "schools", "residential blocks", "community gardens"],
+    "notGoodFor": ["large high-velocity flows", "compacted clay without soil amendment", "areas with shallow utilities"],
+    "maintenanceNeeds": "Weed, mulch, replace plants, keep inflow clear, inspect after heavy storms.",
+    "sourceNote": "Source-backed planning range from EPA and extension rain garden guidance; use soil tests for final design."
+  },
+  {
+    "id": "permeable-pavement",
+    "name": "Permeable Pavement",
+    "minCapturePercent": 0.18,
+    "maxCapturePercent": 0.36,
+    "minPeakFlowReductionPercent": 20,
+    "maxPeakFlowReductionPercent": 50,
+    "bestFor": ["parking lanes", "plazas", "low-speed streets", "parking lots"],
+    "notGoodFor": ["high sediment areas", "heavy truck routes without structural design", "poorly maintained surfaces"],
+    "maintenanceNeeds": "Vacuum sweep, prevent sediment clogging, inspect subbase drainage.",
+    "sourceNote": "Source-backed planning range from EPA green infrastructure and permeable pavement practice references."
+  },
+  {
+    "id": "tree-trench",
+    "name": "Tree Trench",
+    "minCapturePercent": 0.08,
+    "maxCapturePercent": 0.20,
+    "minPeakFlowReductionPercent": 10,
+    "maxPeakFlowReductionPercent": 32,
+    "bestFor": ["sidewalk corridors", "heat islands", "commercial streets", "tree canopy gaps"],
+    "notGoodFor": ["narrow utility corridors", "locations without root volume", "high salt/sediment loading"],
+    "maintenanceNeeds": "Tree care, inlet cleaning, structural soil inspection, replace dead trees.",
+    "sourceNote": "Source-backed planning range adapted from urban tree and bioretention stormwater references."
+  },
+  {
+    "id": "retention-pond",
+    "name": "Retention Basin",
+    "minCapturePercent": 0.24,
+    "maxCapturePercent": 0.48,
+    "minPeakFlowReductionPercent": 35,
+    "maxPeakFlowReductionPercent": 70,
+    "bestFor": ["larger drainage areas", "parks", "floodplain edges", "available public land"],
+    "notGoodFor": ["fully built-out blocks", "small parcels", "areas without safe overflow paths"],
+    "maintenanceNeeds": "Sediment removal, outlet inspection, vegetation management, embankment inspection.",
+    "sourceNote": "Source-backed planning range from detention/retention basin design references and EPA stormwater practice guidance."
+  },
+  {
+    "id": "wetland",
+    "name": "Wetland",
+    "minCapturePercent": 0.20,
+    "maxCapturePercent": 0.42,
+    "minPeakFlowReductionPercent": 25,
+    "maxPeakFlowReductionPercent": 60,
+    "bestFor": ["creek corridors", "floodplain buffers", "habitat areas", "large public parcels"],
+    "notGoodFor": ["tiny urban parcels", "high trash loads without pretreatment", "sites without baseflow or planting area"],
+    "maintenanceNeeds": "Manage invasive species, sediment, trash, outlet controls, and vegetation health.",
+    "sourceNote": "Source-backed planning range from constructed wetland and EPA green infrastructure guidance."
+  },
+  {
+    "id": "smart-storage-network",
+    "name": "Smart Storage Network",
+    "minCapturePercent": 0.18,
+    "maxCapturePercent": 0.45,
+    "minPeakFlowReductionPercent": 40,
+    "maxPeakFlowReductionPercent": 72,
+    "bestFor": [
+      "dense neighborhoods",
+      "areas with recurring sewer overload",
+      "places with limited surface space for large green infrastructure",
+      "areas where captured water could support drought reuse or irrigation"
+    ],
+    "notGoodFor": [
+      "places with no feasible underground storage space",
+      "areas with high groundwater conflict",
+      "areas without maintenance capacity",
+      "areas with poor power or backup reliability"
+    ],
+    "maintenanceNeeds": "Inspect sensors, power backup, telemetry, smart valves, tank access, sediment, pumps, emergency bypasses, and slow-release settings.",
+    "sourceNote": "Planning range combines underground detention, smart outlet control, and slow-release assumptions; verify with SWMM, local hydraulic models, and utility conflict review."
+  }
+]

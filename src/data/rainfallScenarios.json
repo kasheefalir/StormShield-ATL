@@ -1,0 +1,54 @@
+[
+  {
+    "id": "normal-rain",
+    "label": "Normal Rain",
+    "rainfallInchesPerHour": 0.35,
+    "totalRainfallInches": 0.7,
+    "durationHours": 2,
+    "recentRainfallInches": 1.1,
+    "averageTemperature": 79,
+    "soilMoisturePercent": 45,
+    "daysSinceLastRain": 3,
+    "routingPreference": "balanced",
+    "description": "A typical warm-season rain event with manageable runoff and balanced storage."
+  },
+  {
+    "id": "extreme-storm",
+    "label": "Extreme Storm",
+    "rainfallInchesPerHour": 2.4,
+    "totalRainfallInches": 4.8,
+    "durationHours": 2,
+    "recentRainfallInches": 2.7,
+    "averageTemperature": 84,
+    "soilMoisturePercent": 72,
+    "daysSinceLastRain": 1,
+    "routingPreference": "flood-prevention",
+    "description": "A short, intense storm that overloads paved areas, drains, and low-lying corridors."
+  },
+  {
+    "id": "drought-mode",
+    "label": "Drought Mode",
+    "rainfallInchesPerHour": 0.08,
+    "totalRainfallInches": 0.2,
+    "durationHours": 3,
+    "recentRainfallInches": 0.15,
+    "averageTemperature": 93,
+    "soilMoisturePercent": 22,
+    "daysSinceLastRain": 18,
+    "routingPreference": "drought-recharge",
+    "description": "Low rainfall after a dry spell, prioritizing storage, trees, parks, and ecological recharge."
+  },
+  {
+    "id": "ai-predicted-drought",
+    "label": "AI Predicted Drought",
+    "rainfallInchesPerHour": 0.18,
+    "totalRainfallInches": 0.45,
+    "durationHours": 4,
+    "recentRainfallInches": 0.25,
+    "averageTemperature": 91,
+    "soilMoisturePercent": 26,
+    "daysSinceLastRain": 13,
+    "routingPreference": "proactive-drought",
+    "description": "A predictive mode that conserves more water before drought conditions fully arrive."
+  }
+]

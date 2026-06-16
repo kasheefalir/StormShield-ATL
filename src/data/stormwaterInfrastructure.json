@@ -1,0 +1,573 @@
+{
+  "source": {
+    "name": "Atlanta Regional Commission Stormwater Failures",
+    "provider": "Atlanta Regional Commission / Metropolitan North Georgia Water Planning District",
+    "url": "https://services1.arcgis.com/Ug5xGQbHsD8zuZzM/arcgis/rest/services/Stormwater_Failures/FeatureServer",
+    "serviceItemId": "bdcaf3e792624a81aaa1e206e3af5119",
+    "importedAt": "2026-06-15T03:26:14.226Z",
+    "note": "Public point layer of stormwater infrastructure failures in the 15-county Metro Atlanta region. It is not a full pipe or inlet inventory; records are media/report-based and likely undercount failures."
+  },
+  "failures": [
+    {
+      "id": "6",
+      "locationName": "Chastain Park",
+      "address": "West Wieuca Rd NE & Dudley Ln",
+      "failureType": "Sinkhole",
+      "year": "2014",
+      "date": "2014-08-11",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://patch.com/georgia/buckhead/sinkhole-road-adjacent-chastain-park-not-repaired-yet-0",
+      "notes": "",
+      "coordinates": [
+        33.877028,
+        -84.387767
+      ]
+    },
+    {
+      "id": "16",
+      "locationName": "Ira St SW & Gardener St SW",
+      "address": "Ira St SW & Gardener St SW",
+      "failureType": "Sinkhole",
+      "year": "2022",
+      "date": "2022-07-31",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.iheart.com/content/2022-08-01-large-sinkhole-consumes-road-in-middle-of-georgia-neighborhood/",
+      "notes": "Exact location unknown",
+      "coordinates": [
+        33.730525,
+        -84.400139
+      ]
+    },
+    {
+      "id": "17",
+      "locationName": "S Eugenia Pl",
+      "address": "679 S Eugenia Pl NW",
+      "failureType": "Sinkhole",
+      "year": "2022",
+      "date": "2022-03-26",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.ajc.com/neighborhoods/gwinnett/in-northwest-atlanta-a-pothole-grows/E2BIRMSBAVHBTIKV3CWQ52OLOY/",
+      "notes": "",
+      "coordinates": [
+        33.773733,
+        -84.454044
+      ]
+    },
+    {
+      "id": "21",
+      "locationName": "Berkely Park Neighborhood",
+      "address": "Berkeley Park NW near Forrest Way NW",
+      "failureType": "Sinkhole",
+      "year": "2021",
+      "date": "2021-05-01",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.wsbtv.com/news/local/atlanta/atlanta-man-could-have-foot-bill-massive-sinkhole-his-yard/S6QKAKMMSNALLDEP55TTBTIF3Q/",
+      "notes": "Exact location unknown.",
+      "coordinates": [
+        33.79703,
+        -84.413015
+      ]
+    },
+    {
+      "id": "30",
+      "locationName": "Woodward Way at Peachtree Creek",
+      "address": "473 Woodward Way NW",
+      "failureType": "Flooding",
+      "year": "2023",
+      "date": "2023-01-04",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.wsbtv.com/news/local/just-too-much-water-streets-parks-across-metro-atlanta-flood-after-heavy-rains/CQQWZXXXZVATNCKEO2MZNRVLMQ/",
+      "notes": "",
+      "coordinates": [
+        33.81967,
+        -84.403327
+      ]
+    },
+    {
+      "id": "35",
+      "locationName": "251 North Apartment Complex",
+      "address": "300 Cityline Ave NE",
+      "failureType": "Flooding",
+      "year": "2015",
+      "date": "2015-06-01",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.wsbtv.com/news/local/residents-clean-after-flooding-midtown-apartments/53671572/",
+      "notes": "",
+      "coordinates": [
+        33.770215,
+        -84.378405
+      ]
+    },
+    {
+      "id": "39",
+      "locationName": "Pollard Blvd SW near Turner Field",
+      "address": "714 Pollard Blvd SW",
+      "failureType": "Flooding",
+      "year": "2023",
+      "date": "2023-01-04",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.ajc.com/news/crime/wednesdays-weather-rolling-severe-thunderstorm-warnings-in-effect/OBDPLFEEIRDLLPGUQY465E2FEQ/",
+      "notes": "",
+      "coordinates": [
+        33.735744,
+        -84.390854
+      ]
+    },
+    {
+      "id": "40",
+      "locationName": "Glenn St SW at Humphries St SW",
+      "address": "502 Glenn St SW",
+      "failureType": "Flooding",
+      "year": "2023",
+      "date": "2023-01-04",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.ajc.com/news/crime/wednesdays-weather-rolling-severe-thunderstorm-warnings-in-effect/OBDPLFEEIRDLLPGUQY465E2FEQ/",
+      "notes": "",
+      "coordinates": [
+        33.738151,
+        -84.404371
+      ]
+    },
+    {
+      "id": "41",
+      "locationName": "3000 Block of Martin Luther King Jr Dr SW",
+      "address": "3000 Martin Luther King Jr Dr SW",
+      "failureType": "Flooding",
+      "year": "2023",
+      "date": "2023-01-04",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.ajc.com/news/crime/wednesdays-weather-rolling-severe-thunderstorm-warnings-in-effect/OBDPLFEEIRDLLPGUQY465E2FEQ/",
+      "notes": "",
+      "coordinates": [
+        33.754291,
+        -84.483504
+      ]
+    },
+    {
+      "id": "42",
+      "locationName": "East Pine Valley Rd",
+      "address": "3037 East Pine Valley Rd NW",
+      "failureType": "Flooding",
+      "year": "2022",
+      "date": "2022-04-05",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.wsbtv.com/news/local/be-weather-aware-heavy-rain-damaging-wind-gusts-possible-with-risk-tornadoes-today/TW6ZBJSH4BAKFHNPW4RGU7RN3Y/",
+      "notes": "",
+      "coordinates": [
+        33.838791,
+        -84.399322
+      ]
+    },
+    {
+      "id": "43",
+      "locationName": "Allene Ave in SW Atlanta",
+      "address": "1056 Allene Ave SW",
+      "failureType": "Flooding",
+      "year": "2022",
+      "date": "2022-04-05",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.wsbtv.com/news/local/be-weather-aware-heavy-rain-damaging-wind-gusts-possible-with-risk-tornadoes-today/TW6ZBJSH4BAKFHNPW4RGU7RN3Y/",
+      "notes": "Exact location not reported.",
+      "coordinates": [
+        33.725919,
+        -84.413577
+      ]
+    },
+    {
+      "id": "58",
+      "locationName": "GA 400/NB Exit1, North of Lenox Rd",
+      "address": "GA 400/NB Exit1, North of Lenox Rd",
+      "failureType": "Flooding",
+      "year": "2023",
+      "date": "2023-01-04",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.wsbtv.com/news/local/list-roads-across-north-georgia-closed-due-flooding/H4GDQ4SEHJGLJMS4TA5ESUYYK4/",
+      "notes": "",
+      "coordinates": [
+        33.853019,
+        -84.369819
+      ]
+    },
+    {
+      "id": "66",
+      "locationName": "Peoplestown",
+      "address": "860 Greenfield St SE",
+      "failureType": "Flooding",
+      "year": "2020",
+      "date": "2020-07-12",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://epaper.ajc.com/html5/reader/production/default.aspx?pubname=&edid=2602d6f2-74d2-4c38-9d4a-4dcfedd03883&pnum=25",
+      "notes": "",
+      "coordinates": [
+        33.730735,
+        -84.382939
+      ]
+    },
+    {
+      "id": "67",
+      "locationName": "Summerhill/Peoplestown Community",
+      "address": "185 South Avenue SE",
+      "failureType": "Flooding",
+      "year": "2020",
+      "date": "2020-07-12",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://epaper.ajc.com/html5/reader/production/default.aspx?pubname=&edid=2602d6f2-74d2-4c38-9d4a-4dcfedd03883&pnum=25",
+      "notes": "",
+      "coordinates": [
+        33.732351,
+        -84.381413
+      ]
+    },
+    {
+      "id": "108",
+      "locationName": "West End Mall",
+      "address": "807 Ralph David Abernathy Blvd SW",
+      "failureType": "Sinkhole",
+      "year": "2017",
+      "date": "2017-08-28",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.ajc.com/news/local/traffic-large-sinkhole-closes-street-southwest-atlanta/OE2oi2IIxyGPoobBn3k7YJ/",
+      "notes": " determined the hole was caused by a faulty storm pipe",
+      "coordinates": [
+        33.738266,
+        -84.415227
+      ]
+    },
+    {
+      "id": "111",
+      "locationName": "Meadow of Piedmont Park",
+      "address": "Atlanta, GA 30309",
+      "failureType": "Sinkhole",
+      "year": "2015",
+      "date": "2015-12-01",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://thesoutherneronline.com/62204/news/misdiagnosis-affects-path-cost-of-park-renovations/",
+      "notes": "Teracotta pipe",
+      "coordinates": [
+        33.783131,
+        -84.371853
+      ]
+    },
+    {
+      "id": "123",
+      "locationName": "Georgia Aquarium",
+      "address": "225 Baker St NW",
+      "failureType": "Flooding",
+      "year": "2023",
+      "date": "2023-09-14",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.ajc.com/news/atlanta-news/rainwater-inside-the-georgia-aquarium-causes-downtown-atlanta-attraction-to-close/RAJ3NZZFJJGTBOQYTB6LIVL5MU/",
+      "notes": "",
+      "coordinates": [
+        33.763568,
+        -84.395213
+      ]
+    },
+    {
+      "id": "124",
+      "locationName": "World of Coca-Cola Pemberton Place",
+      "address": "126 Ivan Allen Jr Blvd NW",
+      "failureType": "Flooding",
+      "year": "2023",
+      "date": "2023-09-14",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.fox5atlanta.com/weather/georgia-weather-downtown-atlanta-flooding",
+      "notes": "",
+      "coordinates": [
+        33.762888,
+        -84.392704
+      ]
+    },
+    {
+      "id": "125",
+      "locationName": "Clark Atlanta University",
+      "address": "223 James P Brawley Dr SW",
+      "failureType": "Flooding",
+      "year": "2023",
+      "date": "2023-09-14",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.fox5atlanta.com/weather/georgia-weather-downtown-atlanta-flooding",
+      "notes": "",
+      "coordinates": [
+        33.750923,
+        -84.412771
+      ]
+    },
+    {
+      "id": "126",
+      "locationName": "Central United Methodist Church",
+      "address": "501 Martin Luther King Jr Dr SW",
+      "failureType": "Flooding",
+      "year": "2023",
+      "date": "2023-09-14",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.fox5atlanta.com/weather/georgia-weather-downtown-atlanta-flooding",
+      "notes": "",
+      "coordinates": [
+        33.754185,
+        -84.403286
+      ]
+    },
+    {
+      "id": "145",
+      "locationName": "Piedmont Road Bridge",
+      "address": "Lambert Dr NE & Piedmont Rd NE Atlanta, GA 30324",
+      "failureType": "Flooding",
+      "year": "2024",
+      "date": "2024-02-12",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.atlantanewsfirst.com/video/2024/02/12/heavy-flooding-causes-problems-piedmont-road-buckhead/",
+      "notes": "",
+      "coordinates": [
+        33.812752,
+        -84.366767
+      ]
+    },
+    {
+      "id": "157",
+      "locationName": "Rodney Cook Park",
+      "address": "Vine St NW, Atlanta, GA 30314",
+      "failureType": "Flooding",
+      "year": "2024",
+      "date": "2024-09-27",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "https://www.atlantanewsfirst.com/video/2024/09/27/rodney-cook-sr-park-atlanta-floods-after-hurricane-helene/",
+      "notes": "",
+      "coordinates": [
+        33.758688,
+        -84.407807
+      ]
+    },
+    {
+      "id": "162",
+      "locationName": "North Fork Peachtree Creek",
+      "address": "North Fork Peachtree Creek in Brookhaven near Victor Road",
+      "failureType": "Flooding",
+      "year": "2024",
+      "date": "2024-09-27",
+      "city": "Atlanta",
+      "county": "DeKalb",
+      "source": "Retrieving data. Wait a few seconds and try to cut or copy again.",
+      "notes": "",
+      "coordinates": [
+        33.861506,
+        -84.287863
+      ]
+    },
+    {
+      "id": "163",
+      "locationName": "Bobby Jones Golf Course",
+      "address": "near Sagamore and Northside Drive at Bobby Jones Golf Course",
+      "failureType": "Flooding",
+      "year": "2024",
+      "date": "2024-09-27",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "Retrieving data. Wait a few seconds and try to cut or copy again.",
+      "notes": "",
+      "coordinates": [
+        33.821393,
+        -84.406181
+      ]
+    },
+    {
+      "id": "164",
+      "locationName": "Hanover West",
+      "address": "Hanover W Dr NW",
+      "failureType": "Flooding",
+      "year": "2024",
+      "date": "2024-09-27",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "Retrieving data. Wait a few seconds and try to cut or copy again.",
+      "notes": "",
+      "coordinates": [
+        33.823245,
+        -84.432909
+      ]
+    },
+    {
+      "id": "165",
+      "locationName": "Lake Forrest Drive",
+      "address": "4504 Lake Forrest Drive",
+      "failureType": "Sinkhole",
+      "year": "2024",
+      "date": "2024-10-01",
+      "city": "Atlanta",
+      "county": "Fulton",
+      "source": "Retrieving data. Wait a few seconds and try to cut or copy again.",
+      "notes": "",
+      "coordinates": [
+        33.745958,
+        -84.740391
+      ]
+    }
+  ],
+  "tapPoints": [
+    {
+      "id": "westside-northside-ms4-tap",
+      "zoneId": "westside-proctor",
+      "name": "Northside Drive MS4 diversion tap",
+      "coordinates": [
+        33.7659,
+        -84.4217
+      ],
+      "accessType": "curb inlet + controlled diversion valve",
+      "lineContext": "Street drainage trunk toward Proctor Creek",
+      "overflowRole": "Intercepts excess street runoff before it enters overloaded Proctor Creek drainage paths.",
+      "divertsTo": [
+        "bioswales",
+        "wetlands",
+        "riverRecharge",
+        "reuseStorage",
+        "stormDrainOverflow"
+      ],
+      "confidence": "modeled from public failure + watershed context"
+    },
+    {
+      "id": "south-downtown-viaduct-ms4-tap",
+      "zoneId": "south-downtown",
+      "name": "South Downtown viaduct inlet tap",
+      "coordinates": [
+        33.7473,
+        -84.3962
+      ],
+      "accessType": "curb inlet + vault bypass",
+      "lineContext": "Dense downtown inlet network near viaduct low points",
+      "overflowRole": "Can divert fast paved runoff toward permeable plaza storage before gray-system surcharge.",
+      "divertsTo": [
+        "permeablePavement",
+        "reuseStorage",
+        "retention",
+        "riverRecharge",
+        "stormDrainOverflow"
+      ],
+      "confidence": "modeled from public failure + impervious surface context"
+    },
+    {
+      "id": "old-fourth-ward-park-outfall-tap",
+      "zoneId": "old-fourth-ward",
+      "name": "Historic Fourth Ward Park outfall control",
+      "coordinates": [
+        33.7695,
+        -84.3661
+      ],
+      "accessType": "park pond control/outfall",
+      "lineContext": "Existing detention pond and park drainage connection",
+      "overflowRole": "Controls release from park detention and redirects excess to Clear Creek support when dry.",
+      "divertsTo": [
+        "retention",
+        "rainGardens",
+        "parksTrees",
+        "riverRecharge",
+        "stormDrainOverflow"
+      ],
+      "confidence": "known GSI feature, modeled valve point"
+    },
+    {
+      "id": "vine-city-cook-park-ms4-tap",
+      "zoneId": "vine-city",
+      "name": "Cook Park neighborhood inlet tap",
+      "coordinates": [
+        33.7548,
+        -84.4179
+      ],
+      "accessType": "curb inlet + park diversion valve",
+      "lineContext": "Residential drainage toward Cook Park and Proctor Creek tributaries",
+      "overflowRole": "Moves residential street runoff into park rain gardens and storage before home flooding worsens.",
+      "divertsTo": [
+        "rainGardens",
+        "bioswales",
+        "parksTrees",
+        "riverRecharge",
+        "retention",
+        "stormDrainOverflow"
+      ],
+      "confidence": "modeled from public complaint/flood vulnerability context"
+    },
+    {
+      "id": "midtown-piedmont-ms4-tap",
+      "zoneId": "midtown",
+      "name": "Piedmont Park edge diversion tap",
+      "coordinates": [
+        33.7842,
+        -84.3791
+      ],
+      "accessType": "street inlet + park-edge controlled diversion",
+      "lineContext": "Midtown paved drainage near Piedmont Park and Clear Creek",
+      "overflowRole": "Diverts roof and street runoff toward park trees, storage, and Clear Creek recharge.",
+      "divertsTo": [
+        "parksTrees",
+        "permeablePavement",
+        "reuseStorage",
+        "riverRecharge",
+        "retention",
+        "stormDrainOverflow"
+      ],
+      "confidence": "modeled from public land-use and receiving-place context"
+    },
+    {
+      "id": "east-atlanta-brownwood-ms4-tap",
+      "zoneId": "east-atlanta",
+      "name": "Brownwood Park neighborhood tap",
+      "coordinates": [
+        33.7408,
+        -84.3436
+      ],
+      "accessType": "neighborhood inlet + rain garden diversion",
+      "lineContext": "Residential drainage toward Brownwood Park and Sugar Creek",
+      "overflowRole": "Captures local street runoff for park rain gardens and creek recharge.",
+      "divertsTo": [
+        "reuseStorage",
+        "rainGardens",
+        "parksTrees",
+        "riverRecharge",
+        "retention",
+        "stormDrainOverflow"
+      ],
+      "confidence": "modeled from creek-fed drainage context"
+    },
+    {
+      "id": "airport-south-headwater-ms4-tap",
+      "zoneId": "airport-south",
+      "name": "South River headwater industrial tap",
+      "coordinates": [
+        33.6426,
+        -84.4218
+      ],
+      "accessType": "industrial drain + controlled wetland bypass",
+      "lineContext": "Large paved catchments draining toward South River headwaters",
+      "overflowRole": "Routes high-volume runoff toward wetland buffers, retention cells, or river headwater refill.",
+      "divertsTo": [
+        "wetlands",
+        "retention",
+        "riverRecharge",
+        "permeablePavement",
+        "stormDrainOverflow"
+      ],
+      "confidence": "modeled from impervious surface and headwater context"
+    }
+  ]
+}

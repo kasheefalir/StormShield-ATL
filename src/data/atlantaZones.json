@@ -1,0 +1,233 @@
+[
+  {
+    "id": "westside-proctor",
+    "name": "Westside / Proctor Creek",
+    "neighborhoodType": "Historic neighborhood near combined drainage pressure",
+    "coordinates": [33.7703, -84.4268],
+    "runoffSource": "Residential streets, curb inlets, parking lots, and low-lying blocks draining toward Proctor Creek",
+    "sourceEvidence": {
+      "complaintDataset": "Demo layer patterned after Atlanta 311 drainage/flooding complaint fields",
+      "complaintSummary": "Clustered drainage complaints indicate repeated street ponding and inlet capacity issues near the Proctor Creek drainage area.",
+      "complaintTypes": ["street flooding", "blocked drain", "yard flooding", "creek overflow"],
+      "waterSupplyReason": "High impervious cover and repeated complaints mean this area can generate enough runoff during storms to supply nearby bioswales, wetlands, and creek recharge."
+    },
+    "floodRiskScore": 91,
+    "imperviousSurfacePercent": 68,
+    "elevationRisk": 83,
+    "drainageComplaintCount": 126,
+    "roadDensityScore": 62,
+    "availableLandScore": 54,
+    "soilInfiltrationScore": 48,
+    "treeCanopyPercent": 28,
+    "slopeRiskScore": 83,
+    "roofCapturePotential": 52,
+    "storagePotential": 58,
+    "maintenanceCapacityScore": 55,
+    "vulnerablePopulationScore": 78,
+    "currentWaterLevel": 64,
+    "storageCapacityGallons": 185000,
+    "nearbyAssets": ["Proctor Creek", "Maddox Park", "linear greenway"],
+    "recommendedGsi": {
+      "primary": "bioswale",
+      "secondary": ["wetland", "smart-storage-network", "tree-trench"]
+    }
+  },
+  {
+    "id": "south-downtown",
+    "name": "South Downtown",
+    "neighborhoodType": "Dense commercial district with paved corridors",
+    "coordinates": [33.7487, -84.3935],
+    "runoffSource": "Downtown roofs, plazas, viaduct streets, parking decks, and compact commercial blocks",
+    "sourceEvidence": {
+      "complaintDataset": "Demo layer patterned after Atlanta 311 drainage/flooding complaint fields",
+      "complaintSummary": "High complaint count plus dense impervious cover flags rapid runoff toward downtown drains and viaduct low points.",
+      "complaintTypes": ["street flooding", "ponding near drains", "parking lot runoff", "curb inlet backup"],
+      "waterSupplyReason": "Large paved and roof surfaces create quick runoff volumes that can be captured for permeable pavement, storage, and headwater recharge."
+    },
+    "floodRiskScore": 86,
+    "imperviousSurfacePercent": 81,
+    "elevationRisk": 77,
+    "drainageComplaintCount": 102,
+    "roadDensityScore": 88,
+    "availableLandScore": 22,
+    "soilInfiltrationScore": 32,
+    "treeCanopyPercent": 12,
+    "slopeRiskScore": 77,
+    "roofCapturePotential": 86,
+    "storagePotential": 48,
+    "maintenanceCapacityScore": 68,
+    "vulnerablePopulationScore": 72,
+    "currentWaterLevel": 58,
+    "storageCapacityGallons": 120000,
+    "nearbyAssets": ["rail viaducts", "street drains", "civic plazas"],
+    "recommendedGsi": {
+      "primary": "permeable-pavement",
+      "secondary": ["smart-storage-network", "tree-trench", "rain-garden"]
+    }
+  },
+  {
+    "id": "old-fourth-ward",
+    "name": "Old Fourth Ward",
+    "neighborhoodType": "Mixed-use district with park storage opportunities",
+    "coordinates": [33.7692, -84.3657],
+    "runoffSource": "Mixed-use roofs, BeltLine-adjacent pavement, streets, and park-edge runoff",
+    "sourceEvidence": {
+      "complaintDataset": "Demo layer patterned after Atlanta 311 drainage/flooding complaint fields",
+      "complaintSummary": "Drainage complaints and dense redevelopment pressure suggest runoff should be routed to existing park detention capacity first.",
+      "complaintTypes": ["street ponding", "trail-edge runoff", "drainage backup"],
+      "waterSupplyReason": "The neighborhood has enough pavement and roof area to feed the existing Historic Fourth Ward Park detention system."
+    },
+    "floodRiskScore": 73,
+    "imperviousSurfacePercent": 61,
+    "elevationRisk": 55,
+    "drainageComplaintCount": 72,
+    "roadDensityScore": 70,
+    "availableLandScore": 48,
+    "soilInfiltrationScore": 55,
+    "treeCanopyPercent": 26,
+    "slopeRiskScore": 55,
+    "roofCapturePotential": 66,
+    "storagePotential": 82,
+    "maintenanceCapacityScore": 74,
+    "vulnerablePopulationScore": 46,
+    "currentWaterLevel": 43,
+    "storageCapacityGallons": 210000,
+    "nearbyAssets": ["Historic Fourth Ward Park", "BeltLine", "detention pond"],
+    "recommendedGsi": {
+      "primary": "retention-pond",
+      "secondary": ["rain-garden", "smart-storage-network", "tree-trench"]
+    }
+  },
+  {
+    "id": "vine-city",
+    "name": "Vine City / English Avenue",
+    "neighborhoodType": "Residential area with known stormwater vulnerability",
+    "coordinates": [33.7554, -84.4161],
+    "runoffSource": "Residential streets, small lots, community facilities, and low points draining toward Proctor Creek tributaries",
+    "sourceEvidence": {
+      "complaintDataset": "Demo layer patterned after Atlanta 311 drainage/flooding complaint fields",
+      "complaintSummary": "Frequent drainage complaints and high elevation-risk score indicate vulnerable residential runoff pathways.",
+      "complaintTypes": ["home flooding", "street flooding", "blocked drain", "yard flooding"],
+      "waterSupplyReason": "Because runoff originates close to homes, routing water into Cook Park, bioswales, and tributary recharge can reduce flood exposure while keeping water local."
+    },
+    "floodRiskScore": 88,
+    "imperviousSurfacePercent": 65,
+    "elevationRisk": 80,
+    "drainageComplaintCount": 118,
+    "roadDensityScore": 64,
+    "availableLandScore": 58,
+    "soilInfiltrationScore": 52,
+    "treeCanopyPercent": 22,
+    "slopeRiskScore": 80,
+    "roofCapturePotential": 58,
+    "storagePotential": 72,
+    "maintenanceCapacityScore": 62,
+    "vulnerablePopulationScore": 86,
+    "currentWaterLevel": 60,
+    "storageCapacityGallons": 160000,
+    "nearbyAssets": ["Cook Park", "Proctor Creek tributaries", "tree canopy gaps"],
+    "recommendedGsi": {
+      "primary": "rain-garden",
+      "secondary": ["bioswale", "tree-trench", "smart-storage-network"]
+    }
+  },
+  {
+    "id": "midtown",
+    "name": "Midtown Core",
+    "neighborhoodType": "High-rise district with heat and runoff pressure",
+    "coordinates": [33.7838, -84.3831],
+    "runoffSource": "High-rise roofs, parking decks, wide streets, sidewalks, and compact commercial parcels",
+    "sourceEvidence": {
+      "complaintDataset": "Demo layer patterned after Atlanta 311 drainage/flooding complaint fields",
+      "complaintSummary": "Moderate complaint count combined with very high impervious cover points to rapid runoff and heat-stressed streets.",
+      "complaintTypes": ["street ponding", "curb inlet backup", "parking deck runoff"],
+      "waterSupplyReason": "Dense roof and pavement surfaces can generate capturable runoff for Piedmont Park trees, Clear Creek recharge, and building-scale storage."
+    },
+    "floodRiskScore": 69,
+    "imperviousSurfacePercent": 78,
+    "elevationRisk": 49,
+    "drainageComplaintCount": 56,
+    "roadDensityScore": 92,
+    "availableLandScore": 18,
+    "soilInfiltrationScore": 34,
+    "treeCanopyPercent": 18,
+    "slopeRiskScore": 49,
+    "roofCapturePotential": 90,
+    "storagePotential": 54,
+    "maintenanceCapacityScore": 72,
+    "vulnerablePopulationScore": 40,
+    "currentWaterLevel": 38,
+    "storageCapacityGallons": 98000,
+    "nearbyAssets": ["Piedmont Park", "street tree network", "parking decks"],
+    "recommendedGsi": {
+      "primary": "tree-trench",
+      "secondary": ["permeable-pavement", "smart-storage-network", "tree-trench"]
+    }
+  },
+  {
+    "id": "east-atlanta",
+    "name": "East Atlanta",
+    "neighborhoodType": "Rolling residential district with creek-fed drainage",
+    "coordinates": [33.7401, -84.3454],
+    "runoffSource": "Neighborhood streets, residential roofs, community gardens, and creek-side drainage paths",
+    "sourceEvidence": {
+      "complaintDataset": "Demo layer patterned after Atlanta 311 drainage/flooding complaint fields",
+      "complaintSummary": "Lower but still meaningful drainage complaints show localized creek-fed flooding and runoff opportunities.",
+      "complaintTypes": ["localized street ponding", "yard flooding", "creek drainage"],
+      "waterSupplyReason": "Rolling terrain can move runoff toward parks and creek channels, making it suitable for smart storage, rain gardens, and Sugar Creek recharge."
+    },
+    "floodRiskScore": 62,
+    "imperviousSurfacePercent": 46,
+    "elevationRisk": 52,
+    "drainageComplaintCount": 41,
+    "roadDensityScore": 48,
+    "availableLandScore": 62,
+    "soilInfiltrationScore": 68,
+    "treeCanopyPercent": 46,
+    "slopeRiskScore": 52,
+    "roofCapturePotential": 55,
+    "storagePotential": 60,
+    "maintenanceCapacityScore": 58,
+    "vulnerablePopulationScore": 55,
+    "currentWaterLevel": 31,
+    "storageCapacityGallons": 135000,
+    "nearbyAssets": ["Brownwood Park", "neighborhood creeks", "community gardens"],
+    "recommendedGsi": {
+      "primary": "smart-storage-network",
+      "secondary": ["rain-garden", "tree-trench", "wetland"]
+    }
+  },
+  {
+    "id": "airport-south",
+    "name": "Airport / South River Headwaters",
+    "neighborhoodType": "Large paved surfaces near headwater recharge zones",
+    "coordinates": [33.6407, -84.4277],
+    "runoffSource": "Large paved service areas, industrial parcels, logistics lots, and airport-adjacent drainage corridors",
+    "sourceEvidence": {
+      "complaintDataset": "Demo layer patterned after Atlanta 311 drainage/flooding complaint fields",
+      "complaintSummary": "Large impervious surfaces near headwater areas create high-volume runoff that can overwhelm downstream channels.",
+      "complaintTypes": ["industrial runoff", "road flooding", "storm drain backup", "headwater overflow"],
+      "waterSupplyReason": "Large paved catchments can provide significant captured water for South River wetlands, retention cells, and drought baseflow refill."
+    },
+    "floodRiskScore": 78,
+    "imperviousSurfacePercent": 74,
+    "elevationRisk": 63,
+    "drainageComplaintCount": 67,
+    "roadDensityScore": 76,
+    "availableLandScore": 72,
+    "soilInfiltrationScore": 42,
+    "treeCanopyPercent": 16,
+    "slopeRiskScore": 63,
+    "roofCapturePotential": 74,
+    "storagePotential": 88,
+    "maintenanceCapacityScore": 64,
+    "vulnerablePopulationScore": 50,
+    "currentWaterLevel": 46,
+    "storageCapacityGallons": 260000,
+    "nearbyAssets": ["South River tributaries", "industrial parcels", "wetland buffers"],
+    "recommendedGsi": {
+      "primary": "wetland",
+      "secondary": ["retention-pond", "smart-storage-network", "permeable-pavement"]
+    }
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "bioswale",
+    "name": "Bioswales",
+    "bestUseCase": "Capturing street runoff along curbs and corridors before it reaches storm drains.",
+    "estimatedCostLevel": "Medium",
+    "waterImpact": "High runoff slowing and filtration",
+    "maintenanceLevel": "Medium",
+    "captureEfficiency": 0.72,
+    "droughtBenefit": 0.45
+  },
+  {
+    "id": "rain-garden",
+    "name": "Rain gardens",
+    "bestUseCase": "Neighborhood-scale capture near homes, schools, and community facilities.",
+    "estimatedCostLevel": "Low",
+    "waterImpact": "Moderate capture with strong community visibility",
+    "maintenanceLevel": "Low",
+    "captureEfficiency": 0.58,
+    "droughtBenefit": 0.56
+  },
+  {
+    "id": "permeable-pavement",
+    "name": "Permeable pavement",
+    "bestUseCase": "Parking lots, alleys, sidewalks, and plazas with high impervious cover.",
+    "estimatedCostLevel": "High",
+    "waterImpact": "High source-control capture on paved surfaces",
+    "maintenanceLevel": "Medium",
+    "captureEfficiency": 0.68,
+    "droughtBenefit": 0.32
+  },
+  {
+    "id": "tree-trench",
+    "name": "Tree trenches",
+    "bestUseCase": "Street corridors needing stormwater capture, shade, and heat relief.",
+    "estimatedCostLevel": "Medium",
+    "waterImpact": "Moderate capture with cooling and canopy co-benefits",
+    "maintenanceLevel": "Medium",
+    "captureEfficiency": 0.53,
+    "droughtBenefit": 0.79
+  },
+  {
+    "id": "retention-pond",
+    "name": "Retention ponds",
+    "bestUseCase": "Parks and larger parcels where stormwater can be stored and released slowly.",
+    "estimatedCostLevel": "High",
+    "waterImpact": "Very high storage and slow release",
+    "maintenanceLevel": "Medium",
+    "captureEfficiency": 0.82,
+    "droughtBenefit": 0.58
+  },
+  {
+    "id": "wetland",
+    "name": "Wetlands",
+    "bestUseCase": "Low-lying ecological buffers that can hold overflow and improve water quality.",
+    "estimatedCostLevel": "High",
+    "waterImpact": "Very high overflow storage and habitat support",
+    "maintenanceLevel": "Low",
+    "captureEfficiency": 0.86,
+    "droughtBenefit": 0.72
+  },
+  {
+    "id": "smart-storage-network",
+    "name": "Smart Storage Network",
+    "bestUseCase": "Dense areas where sensors and smart valves can divert sewer peaks into underground storage for slow release or reuse.",
+    "estimatedCostLevel": "High",
+    "waterImpact": "High peak-flow reduction through detention, diversion, and slow release",
+    "maintenanceLevel": "Medium",
+    "captureEfficiency": 0.82,
+    "droughtBenefit": 0.82
+  }
+]

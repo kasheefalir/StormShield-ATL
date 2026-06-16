@@ -1,0 +1,503 @@
+{
+  "westside-proctor": [
+    {
+      "id": "proctor-creek-greenway-bioswales",
+      "destination": "bioswales",
+      "name": "Proctor Creek Greenway bioswale corridor",
+      "coordinates": [33.7738, -84.4292],
+      "placeType": "greenway corridor",
+      "reason": "This is closest to the Westside runoff source and can intercept street runoff before it reaches Proctor Creek."
+    },
+    {
+      "id": "maddox-park-rain-gardens",
+      "destination": "rainGardens",
+      "name": "Maddox Park green soak-in area",
+      "coordinates": [33.7704711, -84.4265021],
+      "placeType": "public park",
+      "reason": "Maddox Park is a real public park beside the Proctor Creek corridor, used here as the visible garden/soil soak-in destination."
+    },
+    {
+      "id": "proctor-creek-retention",
+      "destination": "retention",
+      "name": "Proctor Creek Greenway floodplain storage",
+      "coordinates": [33.7755133, -84.4406309],
+      "placeType": "visible creek corridor",
+      "reason": "This endpoint sits on a mapped Proctor Creek stream reach, so park detention is shown along the real creek corridor."
+    },
+    {
+      "id": "proctor-creek-wetlands",
+      "destination": "wetlands",
+      "name": "Proctor Creek wetland buffer",
+      "coordinates": [33.7852, -84.4417],
+      "placeType": "wetland buffer",
+      "reason": "Wetland buffers can accept overflow while filtering runoff before it reaches the creek."
+    },
+    {
+      "id": "proctor-creek-recharge",
+      "destination": "riverRecharge",
+      "name": "Chattahoochee River corridor at Bolton",
+      "coordinates": [33.8243068, -84.4574163],
+      "placeType": "visible river reach",
+      "reason": "The marker is placed on the visible Chattahoochee River corridor, not on the nearby highway crossing.",
+      "droughtPriority": true
+    },
+    {
+      "id": "maddox-park-tree-trenches",
+      "destination": "parksTrees",
+      "name": "Maddox Park tree trench recharge",
+      "coordinates": [33.7708, -84.4187],
+      "placeType": "park canopy",
+      "reason": "Tree trenches near Maddox Park can use smaller captured flows for shade and heat reduction."
+    },
+    {
+      "id": "westside-reuse-storage",
+      "destination": "reuseStorage",
+      "name": "Mercedes-Benz Stadium stormwater storage",
+      "coordinates": [33.7554123, -84.4008493],
+      "placeType": "documented reuse storage",
+      "reason": "Stored excess is routed to the real stadium reuse/storage anchor instead of a modeled neighborhood tank."
+    },
+    {
+      "id": "northside-drive-controlled-release",
+      "destination": "stormDrainOverflow",
+      "name": "Northside Drive controlled storm drain release",
+      "coordinates": [33.7608, -84.4133],
+      "placeType": "controlled overflow",
+      "reason": "Overflow is treated as a last-resort slow release after green storage is full."
+    }
+  ],
+  "south-downtown": [
+    {
+      "id": "south-downtown-permeable-plaza",
+      "destination": "permeablePavement",
+      "name": "South Downtown permeable plaza retrofit",
+      "coordinates": [33.7483, -84.3922],
+      "placeType": "civic plaza",
+      "reason": "Dense pavement produces runoff quickly, so permeable plaza surfaces are the first capture point."
+    },
+    {
+      "id": "south-downtown-curbside-bioswales",
+      "destination": "bioswales",
+      "name": "South Downtown curbside bioswales",
+      "coordinates": [33.7469, -84.3968],
+      "placeType": "curbside GSI",
+      "reason": "Bioswales along downtown curb lines intercept street runoff before it backs up at drains."
+    },
+    {
+      "id": "gulch-rain-gardens",
+      "destination": "rainGardens",
+      "name": "Historic Fourth Ward Park soak-in landscape",
+      "coordinates": [33.7680818, -84.3650511],
+      "placeType": "public park landscape",
+      "reason": "This is a real green destination with stormwater landscape capacity, replacing the vague Gulch edge marker."
+    },
+    {
+      "id": "underground-atlanta-storage",
+      "destination": "reuseStorage",
+      "name": "Mercedes-Benz Stadium stormwater storage",
+      "coordinates": [33.7554123, -84.4008493],
+      "placeType": "documented reuse storage",
+      "reason": "Downtown excess is routed to the real stadium storage/reuse anchor rather than a modeled Underground Atlanta tank."
+    },
+    {
+      "id": "browns-mill-food-forest-south-downtown",
+      "destination": "urbanFarms",
+      "name": "Urban Food Forest at Browns Mill",
+      "coordinates": [33.6922987, -84.3758957],
+      "placeType": "public food forest",
+      "reason": "Overflow is stored first, then reused for irrigation at a real Atlanta food forest rather than sent directly to crops."
+    },
+    {
+      "id": "phoenix-park-retention",
+      "destination": "retention",
+      "name": "Phoenix II Park green storage",
+      "coordinates": [33.7347163, -84.3825712],
+      "placeType": "public park",
+      "reason": "Phoenix II Park is a real park south of downtown; the marker is placed on the park, not a road label."
+    },
+    {
+      "id": "south-river-headwater-recharge",
+      "destination": "riverRecharge",
+      "name": "South River stream reach",
+      "coordinates": [33.690084, -84.3803505],
+      "placeType": "mapped stream reach",
+      "reason": "This endpoint uses an OpenStreetMap South River waterway reach, not a road named South River.",
+      "droughtPriority": true
+    },
+    {
+      "id": "south-downtown-tree-planters",
+      "destination": "parksTrees",
+      "name": "South Downtown street tree stormwater planters",
+      "coordinates": [33.7467, -84.3908],
+      "placeType": "street canopy",
+      "reason": "Tree planters can reuse captured downtown runoff for shade on heat-stressed sidewalks."
+    },
+    {
+      "id": "clear-creek-wetland-polish",
+      "destination": "wetlands",
+      "name": "Clear Creek wetland polishing area",
+      "coordinates": [33.7639, -84.3759],
+      "placeType": "wetland buffer",
+      "reason": "Wetlands provide overflow polishing when downtown storage is full."
+    },
+    {
+      "id": "downtown-controlled-drain",
+      "destination": "stormDrainOverflow",
+      "name": "Downtown controlled drain release",
+      "coordinates": [33.7442, -84.3861],
+      "placeType": "controlled overflow",
+      "reason": "Used only for remaining water after distributed capture and storage are saturated."
+    }
+  ],
+  "old-fourth-ward": [
+    {
+      "id": "historic-fourth-ward-park-pond",
+      "destination": "retention",
+      "name": "Historic Fourth Ward Park detention pond",
+      "coordinates": [33.7680818, -84.3650511],
+      "placeType": "park detention pond",
+      "reason": "This existing park pond is designed to hold stormwater and release it slowly."
+    },
+    {
+      "id": "beltline-rain-gardens",
+      "destination": "rainGardens",
+      "name": "Eastside BeltLine rain gardens",
+      "coordinates": [33.7709, -84.3624],
+      "placeType": "trail-side rain gardens",
+      "reason": "Trail-side rain gardens can absorb runoff from nearby paved paths and streets."
+    },
+    {
+      "id": "old-fourth-ward-tree-trenches",
+      "destination": "parksTrees",
+      "name": "Old Fourth Ward street tree trenches",
+      "coordinates": [33.7668, -84.3671],
+      "placeType": "street canopy",
+      "reason": "Tree trenches turn captured runoff into cooling and canopy support."
+    },
+    {
+      "id": "old-fourth-ward-bioswales",
+      "destination": "bioswales",
+      "name": "Old Fourth Ward curbside bioswales",
+      "coordinates": [33.7677, -84.3704],
+      "placeType": "curbside GSI",
+      "reason": "Bioswales can intercept street runoff before it reaches the park pond and downstream drains."
+    },
+    {
+      "id": "clear-creek-wetland-buffer",
+      "destination": "wetlands",
+      "name": "Clear Creek wetland buffer",
+      "coordinates": [33.7739, -84.3619],
+      "placeType": "wetland buffer",
+      "reason": "A wetland buffer can polish overflow before it reaches Clear Creek."
+    },
+    {
+      "id": "clear-creek-recharge",
+      "destination": "riverRecharge",
+      "name": "Historic Fourth Ward Park lake / Clear Creek basin",
+      "coordinates": [33.7680818, -84.3650511],
+      "placeType": "visible stormwater lake",
+      "reason": "The recharge marker is placed on the visible park lake that functions as a Clear Creek stormwater basin.",
+      "droughtPriority": true
+    },
+    {
+      "id": "old-fourth-ward-storage",
+      "destination": "reuseStorage",
+      "name": "Historic Fourth Ward Park stormwater pond reserve",
+      "coordinates": [33.7680818, -84.3650511],
+      "placeType": "visible stormwater storage",
+      "reason": "Stored excess stays at the real stormwater pond instead of a modeled community tank."
+    },
+    {
+      "id": "fourth-ward-overflow",
+      "destination": "stormDrainOverflow",
+      "name": "Fourth Ward controlled overflow",
+      "coordinates": [33.7606, -84.3692],
+      "placeType": "controlled overflow",
+      "reason": "Last-resort overflow after the park pond and green infrastructure are full."
+    }
+  ],
+  "vine-city": [
+    {
+      "id": "cook-park-rain-gardens",
+      "destination": "rainGardens",
+      "name": "Rodney Cook Sr. Park rain gardens",
+      "coordinates": [33.7608, -84.4072],
+      "placeType": "park rain gardens",
+      "reason": "Cook Park is close to the vulnerable residential source and can receive neighborhood runoff."
+    },
+    {
+      "id": "vine-city-bioswales",
+      "destination": "bioswales",
+      "name": "Vine City curbside bioswales",
+      "coordinates": [33.7578, -84.4149],
+      "placeType": "curbside GSI",
+      "reason": "Curbside bioswales intercept street runoff before it reaches homes and low points."
+    },
+    {
+      "id": "cook-park-tree-trenches",
+      "destination": "parksTrees",
+      "name": "Cook Park tree trench network",
+      "coordinates": [33.7529, -84.4189],
+      "placeType": "tree trench network",
+      "reason": "Tree trenches provide both runoff storage and heat reduction in a canopy-gap area."
+    },
+    {
+      "id": "proctor-creek-tributary-recharge",
+      "destination": "riverRecharge",
+      "name": "Chattahoochee River corridor at Bolton",
+      "coordinates": [33.8243068, -84.4574163],
+      "placeType": "visible river reach",
+      "reason": "Vine City drains through Proctor Creek toward the Chattahoochee, and the marker now lands on the visible river corridor.",
+      "droughtPriority": true
+    },
+    {
+      "id": "cook-park-retention",
+      "destination": "retention",
+      "name": "Rodney Cook Sr. Park detention storage",
+      "coordinates": [33.7620783, -84.4076463],
+      "placeType": "park detention",
+      "reason": "Cook Park storage can slow storm peaks from vulnerable residential blocks."
+    },
+    {
+      "id": "vine-city-wetland-pocket",
+      "destination": "wetlands",
+      "name": "Vine City wetland pocket",
+      "coordinates": [33.7609, -84.4218],
+      "placeType": "wetland pocket",
+      "reason": "Wetland pockets can receive overflow after rain gardens and bioswales fill."
+    },
+    {
+      "id": "vine-city-storage",
+      "destination": "reuseStorage",
+      "name": "Mercedes-Benz Stadium stormwater storage",
+      "coordinates": [33.7554123, -84.4008493],
+      "placeType": "documented reuse storage",
+      "reason": "Stored excess is routed to the real stadium storage/reuse anchor near Vine City."
+    },
+    {
+      "id": "vine-city-overflow",
+      "destination": "stormDrainOverflow",
+      "name": "Vine City controlled drain release",
+      "coordinates": [33.7496, -84.4111],
+      "placeType": "controlled overflow",
+      "reason": "Overflow remains only after local green capture and storage fill."
+    }
+  ],
+  "midtown": [
+    {
+      "id": "piedmont-park-tree-trenches",
+      "destination": "parksTrees",
+      "name": "Piedmont Park tree trench recharge",
+      "coordinates": [33.7851, -84.3738],
+      "placeType": "park canopy",
+      "reason": "Midtown runoff can support nearby park trees and reduce urban heat."
+    },
+    {
+      "id": "midtown-permeable-pavement",
+      "destination": "permeablePavement",
+      "name": "Midtown parking-lane permeable pavement",
+      "coordinates": [33.7811, -84.3859],
+      "placeType": "street retrofit",
+      "reason": "High impervious cover makes source-control pavement the fastest way to reduce runoff."
+    },
+    {
+      "id": "midtown-storage",
+      "destination": "reuseStorage",
+      "name": "Atlanta Botanical Garden rainwater storage",
+      "coordinates": [33.7910822, -84.3732295],
+      "placeType": "documented reuse storage",
+      "reason": "The Botanical Garden has documented rainwater storage, so the stored-excess marker uses that real destination."
+    },
+    {
+      "id": "clear-creek-midtown-recharge",
+      "destination": "riverRecharge",
+      "name": "Lake Clara Meer / Clear Creek recharge",
+      "coordinates": [33.7850634, -84.3736135],
+      "placeType": "visible park lake",
+      "reason": "The endpoint is placed on Lake Clara Meer so the waterway recharge point is visibly connected to water on the map.",
+      "droughtPriority": true
+    },
+    {
+      "id": "midtown-retention-vault",
+      "destination": "retention",
+      "name": "Lake Clara Meer park storage",
+      "coordinates": [33.7850634, -84.3736135],
+      "placeType": "visible park lake",
+      "reason": "The retention endpoint is placed on Lake Clara Meer, a visible water body in Piedmont Park."
+    },
+    {
+      "id": "piedmont-park-wetland-edge",
+      "destination": "wetlands",
+      "name": "Piedmont Park wetland edge",
+      "coordinates": [33.7905, -84.3725],
+      "placeType": "park wetland edge",
+      "reason": "Wetland edges can hold overflow and support habitat near the park lake system."
+    },
+    {
+      "id": "midtown-pocket-rain-gardens",
+      "destination": "rainGardens",
+      "name": "Atlanta Botanical Garden soak-in gardens",
+      "coordinates": [33.7910822, -84.3732295],
+      "placeType": "botanical garden",
+      "reason": "Garden soak-in is anchored to the real Atlanta Botanical Garden beside Piedmont Park."
+    },
+    {
+      "id": "midtown-overflow",
+      "destination": "stormDrainOverflow",
+      "name": "Midtown controlled drain release",
+      "coordinates": [33.7783, -84.3802],
+      "placeType": "controlled overflow",
+      "reason": "Used only when distributed storage is full during intense storms."
+    }
+  ],
+  "east-atlanta": [
+    {
+      "id": "east-atlanta-storage",
+      "destination": "reuseStorage",
+      "name": "Brownwood Park stored-excess area",
+      "coordinates": [33.737616, -84.3469207],
+      "placeType": "public park storage",
+      "reason": "Stored excess is anchored to Brownwood Park rather than a modeled East Atlanta tank."
+    },
+    {
+      "id": "browns-mill-food-forest-east-atlanta",
+      "destination": "urbanFarms",
+      "name": "Urban Food Forest at Browns Mill",
+      "coordinates": [33.6922987, -84.3758957],
+      "placeType": "public food forest",
+      "reason": "Stored water can support a real southeast Atlanta food forest during dry periods."
+    },
+    {
+      "id": "brownwood-park-rain-gardens",
+      "destination": "rainGardens",
+      "name": "Brownwood Park rain gardens",
+      "coordinates": [33.737616, -84.3469207],
+      "placeType": "park rain gardens",
+      "reason": "Park soils can receive smaller residential flows and keep them out of streets."
+    },
+    {
+      "id": "east-atlanta-tree-trenches",
+      "destination": "parksTrees",
+      "name": "East Atlanta tree trench corridors",
+      "coordinates": [33.7373, -84.3488],
+      "placeType": "street canopy",
+      "reason": "Tree trenches use captured water for canopy and neighborhood cooling."
+    },
+    {
+      "id": "sugar-creek-recharge",
+      "destination": "riverRecharge",
+      "name": "Sugar Creek stream reach",
+      "coordinates": [33.7494757, -84.3399777],
+      "placeType": "mapped stream reach",
+      "reason": "This endpoint uses an OpenStreetMap Sugar Creek waterway reach instead of a generic corridor point.",
+      "droughtPriority": true
+    },
+    {
+      "id": "east-atlanta-wetland-pocket",
+      "destination": "wetlands",
+      "name": "East Atlanta wetland pocket",
+      "coordinates": [33.7348, -84.3417],
+      "placeType": "wetland pocket",
+      "reason": "Wetland pockets can polish overflow from creek-fed drainage areas."
+    },
+    {
+      "id": "brownwood-park-retention",
+      "destination": "retention",
+      "name": "Brownwood Park slow-release storage",
+      "coordinates": [33.737616, -84.3469207],
+      "placeType": "park storage",
+      "reason": "Park storage can pause runoff from rolling residential streets before it reaches creeks."
+    },
+    {
+      "id": "east-atlanta-overflow",
+      "destination": "stormDrainOverflow",
+      "name": "East Atlanta controlled drain release",
+      "coordinates": [33.7374, -84.3531],
+      "placeType": "controlled overflow",
+      "reason": "Last-resort release after local storage and park capacity fill."
+    }
+  ],
+  "airport-south": [
+    {
+      "id": "south-river-headwater-wetlands",
+      "destination": "wetlands",
+      "name": "South River headwater wetland buffers",
+      "coordinates": [33.6511, -84.4068],
+      "placeType": "headwater wetland",
+      "reason": "Large paved areas near headwaters need overflow buffers that can hold and filter runoff."
+    },
+    {
+      "id": "airport-south-retention",
+      "destination": "retention",
+      "name": "Airport-area visible stormwater basin",
+      "coordinates": [33.6517544, -84.4050438],
+      "placeType": "visible water basin",
+      "reason": "The marker is placed on an OpenStreetMap water basin near the airport instead of an unnamed industrial parcel."
+    },
+    {
+      "id": "south-river-recharge",
+      "destination": "riverRecharge",
+      "name": "Flint River headwater stream",
+      "coordinates": [33.6566385, -84.4197303],
+      "placeType": "mapped stream reach",
+      "reason": "The endpoint uses a mapped Flint River waterway reach near Hartsfield-Jackson.",
+      "droughtPriority": true
+    },
+    {
+      "id": "airport-permeable-pavement",
+      "destination": "permeablePavement",
+      "name": "Airport-area permeable service lots",
+      "coordinates": [33.6467, -84.4382],
+      "placeType": "paved lot retrofit",
+      "reason": "Permeable service lots reduce first-flush runoff from large paved surfaces."
+    },
+    {
+      "id": "airport-south-bioswales",
+      "destination": "bioswales",
+      "name": "Airport South service-road bioswales",
+      "coordinates": [33.6451, -84.4217],
+      "placeType": "service-road GSI",
+      "reason": "Long service-road swales can intercept sheet flow from large paved parcels."
+    },
+    {
+      "id": "airport-south-rain-gardens",
+      "destination": "rainGardens",
+      "name": "Airport-area green basin edge",
+      "coordinates": [33.6480248, -84.3984868],
+      "placeType": "visible water/green basin",
+      "reason": "Garden soak-in is anchored to a visible basin/green edge near airport facilities."
+    },
+    {
+      "id": "airport-south-tree-buffer",
+      "destination": "parksTrees",
+      "name": "South River headwater tree buffer",
+      "coordinates": [33.6387, -84.3987],
+      "placeType": "riparian tree buffer",
+      "reason": "Tree buffers use captured runoff to cool and stabilize headwater corridors."
+    },
+    {
+      "id": "airport-south-reuse-storage",
+      "destination": "reuseStorage",
+      "name": "Hartsfield-Jackson terminal-area storage",
+      "coordinates": [33.6374009, -84.4298161],
+      "placeType": "airport storage anchor",
+      "reason": "Stored excess is anchored to the real airport campus rather than an invented tank location."
+    },
+    {
+      "id": "browns-mill-food-forest-airport-south",
+      "destination": "urbanFarms",
+      "name": "Urban Food Forest at Browns Mill",
+      "coordinates": [33.6922987, -84.3758957],
+      "placeType": "public food forest",
+      "reason": "After capture and storage, a controlled reuse share can support the nearby public food forest instead of remaining unused."
+    },
+    {
+      "id": "airport-controlled-overflow",
+      "destination": "stormDrainOverflow",
+      "name": "Airport South controlled drain release",
+      "coordinates": [33.6358, -84.4205],
+      "placeType": "controlled overflow",
+      "reason": "Overflow is held as the last release path after wetlands and retention cells fill."
+    }
+  ]
+}
