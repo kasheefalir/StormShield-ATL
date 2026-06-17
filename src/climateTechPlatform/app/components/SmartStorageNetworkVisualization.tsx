@@ -99,25 +99,26 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
     // 0.45–0.85: tanks fill (0→45%), sewer drops
     // 0.85–1.0 : full normal
 
-    // Sewer pipe load: rises 0→130% over first 25%, then drops toward 57% as valve diverts 76% of peak flow
-    // 130% → 57% matches card: 76% of storm runoff diverted, pipe drops from overloaded to well below capacity
-    const rawLoad   = Math.min(prog / 0.25, 1) * 1.30;
+    // Sewer pipe load: rises 0→105% over first 25%, then drops to an HONEST 90% as a distributed
+    // tank network diverts the peak overshoot (~14% of runoff) at the source to reuse/recharge.
+    // 105% → 90% matches card: capture ~400–510k gal of the 2.8M-gal storm, just past capacity → safe headroom.
+    const rawLoad   = Math.min(prog / 0.25, 1) * 1.05;
     const valveAmt  = prog < 0.25 ? 0 : Math.min((prog - 0.25) / 0.20, 1);
-    const sewUtil   = Math.max(rawLoad - valveAmt * 0.73, 0.57 * Math.min(prog / 0.25, 1));
+    const sewUtil   = Math.max(rawLoad - valveAmt * 0.15, 0.90 * Math.min(prog / 0.25, 1));
     const stressed  = sewUtil > 1.0;
 
-    // Tank fill: 0→45% between prog 0.42→0.85 (45% utilized = reserve capacity maintained per RTC best practice)
-    const tankFill  = prog < 0.42 ? 0 : Math.min((prog - 0.42) / 0.43 * 0.45, 0.45);
+    // Tank fill: 0→90% between prog 0.42→0.85 (tanks capture the diverted peak overshoot)
+    const tankFill  = prog < 0.42 ? 0 : Math.min((prog - 0.42) / 0.43 * 0.90, 0.90);
     // normalised 0→1 for visuals
-    const fillFrac  = tankFill / 0.45;
+    const fillFrac  = tankFill / 0.90;
 
-    // Metrics — aligned to card: 76% runoff diverted, 74% peak flow reduction
-    // 3,850 gal/min max diversion (EPA RTC pilot scale; Milwaukee, Kansas City case studies)
-    // overflow cap 4,400 gal/min pre-valve (100-yr storm event estimate)
+    // Metrics — honest distributed-network numbers for the South Downtown 1-hr storm:
+    // ~6,500 gal/min peak diversion (= ~400k gal/hr shaved off the peak), de-rated as valve ramps.
+    // overflow ~2,200 gal/min pre-valve (the ~5% overshoot above 100% before the tanks engage).
     const pipeDispPct  = Math.round(sewUtil * 100);
-    const overflowGPM  = valveAmt > 0.88 ? 0 : Math.round(Math.min(prog / 0.25, 1) * 4400 * Math.max(1 - valveAmt * 1.25, 0));
-    const divertedGPM  = Math.round(valveAmt * 3850);
-    const storagePct   = Math.round(tankFill * 100);   // out of 45 max → shows actual %
+    const overflowGPM  = valveAmt > 0.88 ? 0 : Math.round(Math.min(prog / 0.25, 1) * 2200 * Math.max(1 - valveAmt * 1.25, 0));
+    const divertedGPM  = Math.round(valveAmt * 6500);
+    const storagePct   = Math.round(tankFill * 100);   // out of 90 max → shows actual %
 
     // Active step 1–8
     let step = 1;
@@ -449,13 +450,13 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
     // Ghost "without system" line
     if (prog > 0.15) {
       const ga = Math.min((prog-0.15)*3, 0.50);
-      const ghostY = sewPipeY + sewPipeH * 0.02; // ~130% fill
+      const ghostY = sewPipeY + sewPipeH * 0.02; // ~105% fill
       ctx.save();
       ctx.strokeStyle = `rgba(239,68,68,${ga})`; ctx.lineWidth = 1.5; ctx.setLineDash([7,4]);
       ctx.beginPath(); ctx.moveTo(pL+6,ghostY); ctx.lineTo(pR-6,ghostY); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = `rgba(239,68,68,${ga*0.82})`; ctx.font = "bold 7px JetBrains Mono, monospace"; ctx.textAlign = "right";
-      ctx.fillText("WITHOUT SMART STORAGE (~130% — OVERFLOW)", pR-8, ghostY-3);
+      ctx.fillText("WITHOUT SMART STORAGE (~105% — OVERFLOW)", pR-8, ghostY-3);
       ctx.textAlign = "left";
       ctx.restore();
     }
@@ -609,36 +610,55 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
 
     // Tank name above
     ctx.fillStyle = "rgba(0,200,225,0.78)"; ctx.font = "bold 8px JetBrains Mono, monospace"; ctx.textAlign = "center";
-    ctx.fillText(`STORAGE TANK ${idx}`, cx, tankY-13);
+    ctx.fillText(`TANK CLUSTER ${idx} / 2`, cx, tankY-13);
     ctx.fillStyle = "rgba(0,170,210,0.52)"; ctx.font = "7px JetBrains Mono, monospace";
-    ctx.fillText("22,500 gal", cx, tankY-4);
+    ctx.fillText("~255k gal · 3 tanks", cx, tankY-4);
     ctx.textAlign = "left";
   }
 
-  // ── TANK RELEASE PIPES (from tank bottom → sewer pipe) ────────────────────
+  // ── TANK OUTFLOW (tank → OUT of the combined sewer, to reuse / recharge) ───
+  // Captured stormwater is diverted sideways out of the system — NOT released back
+  // into the sewer pipe below. Slow controlled release happens post-storm.
   function drawTankReleasePipes(ctx: CanvasRenderingContext2D, tank1CX: number, tank2CX: number, tankY: number, tankH: number, sewPipeY: number, fillFrac: number, t: number) {
-    const releaseAlpha = fillFrac * 0.55;
-    [tank1CX, tank2CX].forEach(cx => {
-      const top = tankY + tankH;
-      const bot = sewPipeY + 2;
-      ctx.fillStyle = "#0c1c28"; ctx.fillRect(cx-5,top,10,bot-top);
-      ctx.strokeStyle = "rgba(0,155,200,0.16)"; ctx.lineWidth = 1;
-      ctx.strokeRect(cx-5,top,10,bot-top);
-      if (releaseAlpha > 0.05) {
-        for (let i=0;i<2;i++) {
-          const dp = ((t*0.012+i*0.5)%1);
-          const dy = top + dp*(bot-top);
-          ctx.fillStyle = `rgba(0,190,170,${releaseAlpha*(1-dp*0.3)})`;
-          ctx.beginPath(); ctx.arc(cx,dy,2,0,Math.PI*2); ctx.fill();
+    const a    = Math.max(fillFrac, 0.12);
+    const top  = tankY + tankH;
+    const drop = Math.min(24, (sewPipeY - top) * 0.4);
+    const elbowY = top + drop;
+    [{ cx: tank1CX, dir: -1 }, { cx: tank2CX, dir: 1 }].forEach(({ cx, dir }) => {
+      const endX = cx + dir * 70;
+      // vertical stub down from tank bottom (stops well short of the sewer)
+      ctx.fillStyle = "#0c1c28"; ctx.fillRect(cx-4, top, 8, drop);
+      ctx.strokeStyle = "rgba(0,185,150,0.18)"; ctx.lineWidth = 1; ctx.strokeRect(cx-4, top, 8, drop);
+      // horizontal arm OUTWARD toward the frame edge (leaving the system)
+      const x0 = dir < 0 ? endX : cx - 4;
+      const w  = Math.abs(endX - cx) + 4;
+      ctx.fillStyle = "#0c1c28"; ctx.fillRect(x0, elbowY-4, w, 8);
+      ctx.strokeStyle = "rgba(0,185,150,0.18)"; ctx.strokeRect(x0, elbowY-4, w, 8);
+      // arrowhead at the outer end
+      ctx.fillStyle = `rgba(0,205,160,${0.5 + a*0.4})`;
+      ctx.beginPath();
+      ctx.moveTo(endX + dir*8, elbowY);
+      ctx.lineTo(endX, elbowY-5);
+      ctx.lineTo(endX, elbowY+5);
+      ctx.closePath(); ctx.fill();
+      // green droplets: down the stub, then outward
+      if (a > 0.05) {
+        for (let i=0;i<3;i++) {
+          const dp = ((t*0.014 + i*0.34) % 1);
+          let px: number, py: number;
+          if (dp < 0.4) { px = cx; py = top + (dp/0.4)*drop; }
+          else { const hp = (dp-0.4)/0.6; px = cx + dir*hp*Math.abs(endX-cx); py = elbowY; }
+          ctx.fillStyle = `rgba(0,210,160,${a*(1-dp*0.3)})`;
+          ctx.beginPath(); ctx.arc(px,py,2,0,Math.PI*2); ctx.fill();
         }
       }
     });
-    // Label "DELAYED RELEASE"
-    if (fillFrac > 0.08) {
+    // Label
+    if (fillFrac > 0.06) {
       const midX = (tank1CX+tank2CX)/2;
-      const midY = tankY + tankH + (sewPipeY - tankY - tankH)*0.55;
-      ctx.fillStyle = `rgba(0,200,175,${fillFrac*0.70})`; ctx.font = "7px JetBrains Mono, monospace"; ctx.textAlign = "center";
-      ctx.fillText("DELAYED RELEASE →", midX, midY);
+      ctx.fillStyle = `rgba(0,210,165,${Math.min(fillFrac+0.2,0.85)})`;
+      ctx.font = "bold 7px JetBrains Mono, monospace"; ctx.textAlign = "center";
+      ctx.fillText("DIVERTED → REUSE / RECHARGE  (slow release, post-storm)", midX, elbowY + 15);
       ctx.textAlign = "left";
     }
   }
@@ -716,7 +736,7 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
 
     // ── Title ──
     ctx.fillStyle = "rgba(0,215,240,0.92)"; ctx.font = `bold 9px ${mono}`; ctx.textAlign = "right";
-    ctx.fillText("SMART STORAGE NETWORK — SENSOR-TRIGGERED VALVE → DUAL TANK DIVERSION", W-12, 18);
+    ctx.fillText("DISTRIBUTED SMART STORAGE — 6-TANK NETWORK → DIVERT TO REUSE / RECHARGE", W-12, 18);
     ctx.textAlign = "left";
 
     // ── Section label on street ──
@@ -748,7 +768,7 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
       ctx.beginPath(); ctx.moveTo(arrX-4,ghostY+4); ctx.lineTo(arrX,ghostY); ctx.lineTo(arrX+4,ghostY+4); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(arrX-4,actualY-4); ctx.lineTo(arrX,actualY+2); ctx.lineTo(arrX+4,actualY-4); ctx.stroke();
       ctx.fillStyle = `rgba(0,230,150,${arrA*0.92})`; ctx.font = `bold 8px ${mono}`;
-      ctx.fillText(`${Math.round(valveAmt*73)}%`, arrX+5, (ghostY+actualY)/2+4);
+      ctx.fillText(`${Math.round(valveAmt*14)}%`, arrX+5, (ghostY+actualY)/2+4);
       ctx.fillText("less", arrX+5, (ghostY+actualY)/2+14);
     }
 
@@ -761,9 +781,9 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
     // ── Tank fill status ──
     const tankMidX = (tank1CX + tank2CX) / 2;
     const statusText = valveAmt > 0.9
-      ? "STORAGE COMPLETE — CONTROLLED RELEASE ACTIVE"
+      ? "PEAK CAPTURED — SLOW RELEASE TO REUSE / RECHARGE"
       : valveAmt > 0.05
-        ? "FILLING — PEAK RUNOFF DIVERTED TO STORAGE"
+        ? "FILLING — PEAK OVERSHOOT DIVERTED OUT OF SEWER"
         : "STANDBY — AWAITING ACTIVATION";
     ctx.fillStyle = valveAmt > 0.05 ? "rgba(0,200,240,0.82)" : "rgba(80,130,155,0.55)";
     ctx.font = `bold 8px ${mono}`; ctx.textAlign = "center";
@@ -790,8 +810,8 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
       ctx.fillStyle = `rgba(0,215,155,${kmA*0.88})`; ctx.font = `bold 8px ${mono}`; ctx.textAlign = "center";
       ctx.fillText("KEY INSIGHT", W/2, kmY+13);
       ctx.fillStyle = `rgba(160,210,230,${kmA*0.82})`; ctx.font = `7px ${mono}`;
-      ctx.fillText("Excess peak stormwater is removed from the sewer and stored until capacity returns.", W/2, kmY+26);
-      ctx.fillText("This does NOT move water faster — it temporarily removes it from the system.", W/2, kmY+36);
+      ctx.fillText("Peak stormwater is captured at the source and diverted OUT of the sewer to reuse & recharge.", W/2, kmY+26);
+      ctx.fillText("It permanently removes ~14% of runoff — pipe drops 105% → 90% (an honest, safe start).", W/2, kmY+36);
       ctx.textAlign = "left";
     }
 
@@ -806,10 +826,10 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
 
     const isNormal = valveAmt > 0.70;
     [
-      { label:"PIPE UTILIZATION",  val:`${pipeDispPct}%`,                           bar:Math.min(pipeDispPct/130,1),  col: isStressed && valveAmt<0.5 ? "rgba(239,130,68,0.95)" : "rgba(0,215,245,0.95)" },
-      { label:"OVERFLOW",          val: overflowGPM>0 ? `${overflowGPM.toLocaleString()} gal/min` : "0  ✓", bar:overflowGPM/4400, col: overflowGPM>0 ? "rgba(239,130,68,0.95)" : "rgba(0,225,140,0.92)" },
-      { label:"DIVERTED (76%)",    val: divertedGPM>0 ? `${divertedGPM.toLocaleString()} gal/min` : "—",    bar:divertedGPM/3850, col:"rgba(0,210,155,0.90)" },
-      { label:"STORAGE UTILIZED",  val:`${storagePct}%`,                            bar:storagePct/45,                col:"rgba(0,200,220,0.90)" },
+      { label:"PIPE UTILIZATION",  val:`${pipeDispPct}%`,                           bar:Math.min(pipeDispPct/105,1),  col: isStressed && valveAmt<0.5 ? "rgba(239,130,68,0.95)" : "rgba(0,215,245,0.95)" },
+      { label:"OVERFLOW",          val: overflowGPM>0 ? `${overflowGPM.toLocaleString()} gal/min` : "0  ✓", bar:overflowGPM/2200, col: overflowGPM>0 ? "rgba(239,130,68,0.95)" : "rgba(0,225,140,0.92)" },
+      { label:"DIVERTED (~14%)",   val: divertedGPM>0 ? `${divertedGPM.toLocaleString()} gal/min` : "—",    bar:divertedGPM/6500, col:"rgba(0,210,155,0.90)" },
+      { label:"STORAGE UTILIZED",  val:`${storagePct}%`,                            bar:storagePct/90,                col:"rgba(0,200,220,0.90)" },
       { label:"FLOOD RISK",        val: isNormal ? "Low  ✓" : isStressed ? "Very High  ⚠" : "High", bar: isNormal ? 0.12 : isStressed ? 0.96 : 0.60, col: isNormal ? "rgba(0,225,140,0.92)" : isStressed ? "rgba(239,130,68,0.95)" : "rgba(245,158,11,0.92)" },
     ].forEach((m,i) => {
       const ry = my+28+i*18;
@@ -829,11 +849,11 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
       { l:"RAIN → STORM DRAIN",      c:"rgba(120,195,255,0.85)" },
       { l:"PIPE FILLS — SENSOR ALERT", c: isStressed ? "rgba(239,130,68,0.95)" : "rgba(0,220,240,0.82)" },
       { l:"SMART VALVE OPENS",        c: valveAmt>0.1 ? "rgba(0,225,140,0.92)" : "rgba(80,130,155,0.70)" },
-      { l:"WATER DIVERTED L & R",     c: valveAmt>0.3 ? "rgba(0,210,155,0.90)" : "rgba(80,130,155,0.70)" },
-      { l:"STORAGE TANKS FILL",       c: storagePct>3  ? "rgba(0,195,240,0.90)" : "rgba(80,130,155,0.70)" },
-      { l:"SEWER LEVEL DROPS",        c: valveAmt>0.6  ? "rgba(0,200,130,0.90)" : "rgba(80,130,155,0.70)" },
-      { l:"OVERFLOW ELIMINATED",      c: overflowGPM===0 && prog>0.5 ? "rgba(0,220,150,0.92)" : "rgba(80,130,155,0.70)" },
-      { l:"SYSTEM → NORMAL",          c: step>=8 ? "rgba(0,225,140,0.95)" : "rgba(80,130,155,0.70)" },
+      { l:"DIVERTED OUT (REUSE)",     c: valveAmt>0.3 ? "rgba(0,210,155,0.90)" : "rgba(80,130,155,0.70)" },
+      { l:"6-TANK NETWORK FILLS",     c: storagePct>3  ? "rgba(0,195,240,0.90)" : "rgba(80,130,155,0.70)" },
+      { l:"SEWER DROPS 105→90%",      c: valveAmt>0.6  ? "rgba(0,200,130,0.90)" : "rgba(80,130,155,0.70)" },
+      { l:"OVERFLOW STOPPED",         c: overflowGPM===0 && prog>0.5 ? "rgba(0,220,150,0.92)" : "rgba(80,130,155,0.70)" },
+      { l:"PIPE AT SAFE 90%",         c: step>=8 ? "rgba(0,225,140,0.95)" : "rgba(80,130,155,0.70)" },
     ];
 
     ctx.fillStyle = "rgba(4,14,28,0.88)";

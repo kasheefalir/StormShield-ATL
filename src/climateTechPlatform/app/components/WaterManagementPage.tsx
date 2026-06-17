@@ -696,7 +696,7 @@ export function WaterManagementPage() {
           <div style={{ display: "flex", gap: 8, padding: "10px 12px", background: "rgba(0,212,216,0.04)", border: "1px solid rgba(0,212,216,0.1)", borderRadius: 8 }}>
             <Info size={13} color="#3a6080" style={{ flexShrink: 0, marginTop: 1 }} />
             <p style={{ margin: 0, fontSize: 10, color: "#3a6080", lineHeight: 1.6 }}>
-              Numbers are based on a 2.4 in/hr storm across Atlanta's five high-risk zones, Atlanta's 2024 water rates, Georgia EPD flow standards, and USGS stream gauge data. Move the sliders to see how different choices change every figure in real time.
+              Numbers are based on a 1-hour, 2.6 in/hr storm across Atlanta's five high-risk zones, Atlanta's 2024 water rates, Georgia EPD flow standards, and USGS stream gauge data. Move the sliders to see how different choices change every figure in real time.
             </p>
           </div>
         </div>

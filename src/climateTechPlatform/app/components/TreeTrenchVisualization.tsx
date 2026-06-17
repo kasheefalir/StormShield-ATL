@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { drawSmartTankFeeder } from "./feederPipe";
 
 function rrPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
   const rad = Math.min(r, w / 2, h / 2);
@@ -18,12 +19,14 @@ interface Props {
   isPlaying: boolean;
   speed: number;
   timelineValue: number;
+  source?: "storm-drain" | "smart-tank";
 }
 
 type Drop = { x: number; y: number; spd: number; len: number; op: number };
 type Particle = { x: number; y: number; vx: number; vy: number; life: number; maxLife: number; type: "flow" | "root" | "bubble" };
 
-export function TreeTrenchVisualization({ isPlaying, speed, timelineValue }: Props) {
+export function TreeTrenchVisualization({ isPlaying, speed, timelineValue, source = "storm-drain" }: Props) {
+  const fromTank = source === "smart-tank";
   const cvRef = useRef<HTMLCanvasElement>(null);
   const elRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
@@ -58,7 +61,7 @@ export function TreeTrenchVisualization({ isPlaying, speed, timelineValue }: Pro
     }
     rafRef.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [isPlaying, speed, timelineValue]);
+  }, [isPlaying, speed, timelineValue, source]);
 
   // ─────────────────────────────────────────────────────────────────────────
   function render(ctx: CanvasRenderingContext2D, W: number, H: number, t: number, prog: number) {
@@ -80,6 +83,16 @@ export function TreeTrenchVisualization({ isPlaying, speed, timelineValue }: Pro
     drawBuildings(ctx, W, skyBot, sceneBot, t);
     drawStreetScene(ctx, W, skyBot, sceneBot, sidBot, t, prog);  // road, sidewalk, curb, trees
     drawTrenchZone(ctx, W, sceneBot, sidBot, trenchBot, H, t, prog);
+    // Underground feeder: excess from the smart tank runs into the Silva-cell trench.
+    if (fromTank) {
+      const ty = sidBot + (trenchBot - sidBot) * 0.42;
+      drawSmartTankFeeder(
+        ctx,
+        [{ x: 2, y: ty }, { x: W * 0.5, y: ty }],
+        t, Math.min(prog / 0.8, 1),
+        { label: "⟶ EXCESS FROM SMART TANK", color: "0,200,140" },
+      );
+    }
     drawOverlay(ctx, W, t, prog);
   }
 
@@ -218,6 +231,8 @@ export function TreeTrenchVisualization({ isPlaying, speed, timelineValue }: Pro
     const treeXs = [W * 0.13, W * 0.27, W * 0.42, W * 0.57, W * 0.71, W * 0.86];
     treeXs.forEach((tx, ti) => drawStreetTree(ctx, tx, sceneBot, skyBot, t, ti, prog));
 
+    // Storm drain + reduced trickle — only when fed from the storm drain.
+    if (!fromTank) {
     // Storm drain (reduced inflow in tree-trench mode)
     const drainX = W * 0.50;
     ctx.fillStyle = "#1a2535";
@@ -237,11 +252,12 @@ export function TreeTrenchVisualization({ isPlaying, speed, timelineValue }: Pro
     ctx.beginPath(); ctx.moveTo(W * 0.3, sidBot - 2); ctx.lineTo(drainX - 9, sidBot - 2); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(W * 0.7, sidBot - 2); ctx.lineTo(drainX + 9, sidBot - 2); ctx.stroke();
     ctx.setLineDash([]);
+    } // end storm-drain block
 
     // Annotation
     ctx.fillStyle = "rgba(0,220,140,0.82)";
     ctx.font = "bold 9px JetBrains Mono, monospace"; ctx.textAlign = "center";
-    ctx.fillText("↓  85% RUNOFF CAPTURED BY TREE TRENCHES  ↓", W / 2, sceneBot - 26);
+    ctx.fillText(`↓  ${Math.round(prog * 35)}% PEAK FLOW REDUCTION — TREE TRENCH NETWORK  ↓`, W / 2, sceneBot - 26);
     ctx.textAlign = "left";
 
     void skyBot;
@@ -412,7 +428,7 @@ export function TreeTrenchVisualization({ isPlaying, speed, timelineValue }: Pro
     ctx.fillText("▶  UNDERGROUND TREE TRENCH — STRUCTURAL SOIL STORAGE  ◀", W / 2, trenchTop + 12);
 
     // Stored volume label
-    const stored = Math.round(prog * 8640);
+    const stored = Math.round(prog * 3000);
     ctx.fillStyle = "rgba(0,200,160,0.75)"; ctx.font = "7px JetBrains Mono, monospace";
     ctx.fillText(`${stored.toLocaleString()} GAL STORED IN ROOT ZONE`, W / 2, trenchTop + 22);
     ctx.textAlign = "left";
@@ -422,8 +438,8 @@ export function TreeTrenchVisualization({ isPlaying, speed, timelineValue }: Pro
     ctx.fillText("← ROOT ZONE ABSORPTION + GROUNDWATER RECHARGE →", W / 2, trenchBot + 12);
     ctx.textAlign = "left";
 
-    // Deep perforated pipe below trench
-    drawPipe(ctx, W, trenchBot, H, prog, t);
+    // Deep perforated pipe below trench (sewer) — only when fed from the storm drain
+    if (!fromTank) drawPipe(ctx, W, trenchBot, H, prog, t);
 
     void sceneBot;
   }
@@ -562,8 +578,8 @@ export function TreeTrenchVisualization({ isPlaying, speed, timelineValue }: Pro
   // ── HUD OVERLAY ────────────────────────────────────────────────────────
   function drawOverlay(ctx: CanvasRenderingContext2D, W: number, t: number, prog: number) {
     const pulse = 0.82 + Math.sin(t * 0.1) * 0.18;
-    const runoffCap  = Math.round(prog * 8640);
-    const cooling    = (prog * 4.8).toFixed(1);
+    const runoffCap  = Math.round(prog * 3000);
+    const cooling    = (prog * 4.0).toFixed(1);
     const treeHealth = Math.round(prog * 78);
     const sewerRed   = Math.round(prog * 35);
 

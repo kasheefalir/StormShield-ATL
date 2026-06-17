@@ -9,7 +9,6 @@ import {
 import gsiSolutionData from "../data/gsiSolutions.json";
 import {
   estimateGsiPlanningImpact,
-  estimatePipeCapacityGallons,
   estimateZoneHydrology,
 } from "../lib/hydrologyModel";
 import {
@@ -329,7 +328,7 @@ function ZoneStatusPanel({
       </strong>
       <div className="status-meter">
         <span>Pipe Capacity</span>
-        <strong>{overloaded ? "130%" : `${targetPeakFlow}%`} / {formatNumber(Math.round(currentHydrology.pipeCapacityGallons / 60))} gal/min</strong>
+        <strong>{overloaded ? "105%" : `${targetPeakFlow}%`} / {formatNumber(Math.round(currentHydrology.pipeCapacityGallons / 60))} gal/min</strong>
         <i><b style={{ width: overloaded ? "92%" : `${Math.max(42, targetPeakFlow * 0.72)}%` }} /></i>
       </div>
       <dl className="status-list">

@@ -8,6 +8,7 @@ import { Play, Pause, ChevronRight, Gauge, Activity, Zap, AlertCircle } from "lu
 import { DataSourcesPage } from "./components/DataSourcesPage";
 import { FloodZonesPage } from "./components/FloodZonesPage";
 import { WaterManagementPage } from "./components/WaterManagementPage";
+import { StrategyBadge } from "./components/StrategyPanel";
 
 type SimMode = "current" | "gsi";
 type ActivePage = "overview" | "flood-map" | "flood-zones" | "solutions" | "water-management" | "data-sources";
@@ -183,6 +184,7 @@ export default function App({ onNavigateToMap }: AppProps = {}) {
                         <Zap size={11} /> GSI Active
                       </Badge>
                     )}
+                    <StrategyBadge zoneId={selectedZoneId} />
                   </div>
                 </div>
               </div>
@@ -275,7 +277,7 @@ export default function App({ onNavigateToMap }: AppProps = {}) {
                   >
                     {[
                       { label: "ZONE AREA", value: "0.82 mi²" },
-                      { label: "RAIN INTENSITY", value: "2.4 in/hr" },
+                      { label: "RAIN INTENSITY", value: "2.6 in/hr" },
                       { label: "SEWER AGE", value: "95–130 yrs" },
                     ].map((s) => (
                       <div
@@ -445,7 +447,7 @@ export default function App({ onNavigateToMap }: AppProps = {}) {
                         }}
                       />
                     </div>
-                    <span style={{ fontSize: 9, color: "#2d5c7a", fontFamily: "JetBrains Mono, monospace" }}>6:00h</span>
+                    <span style={{ fontSize: 9, color: "#2d5c7a", fontFamily: "JetBrains Mono, monospace" }}>1:00h</span>
                   </div>
 
                   {simMode === "current" && (

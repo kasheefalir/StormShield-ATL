@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { drawSmartTankFeeder } from "./feederPipe";
 
 function rrPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
   const rad = Math.min(r, w / 2, h / 2);
@@ -18,13 +19,15 @@ interface Props {
   isPlaying: boolean;
   speed: number;
   timelineValue: number;
+  source?: "storm-drain" | "smart-tank";
 }
 
 type Drop = { x: number; y: number; spd: number; len: number; op: number };
 type RunoffParticle = { x: number; y: number; tx: number; life: number; onPerm: boolean };
 type PipeParticle = { x: number; life: number };
 
-export function PermeablePavementVisualization({ isPlaying, speed, timelineValue }: Props) {
+export function PermeablePavementVisualization({ isPlaying, speed, timelineValue, source = "storm-drain" }: Props) {
+  const fromTank = source === "smart-tank";
   const cvRef       = useRef<HTMLCanvasElement>(null);
   const elRef       = useRef<HTMLDivElement>(null);
   const rafRef      = useRef(0);
@@ -62,7 +65,7 @@ export function PermeablePavementVisualization({ isPlaying, speed, timelineValue
     }
     rafRef.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [isPlaying, speed, timelineValue]);
+  }, [isPlaying, speed, timelineValue, source]);
 
   function render(ctx: CanvasRenderingContext2D, W: number, H: number, t: number, prog: number) {
     ctx.clearRect(0, 0, W, H);
@@ -91,11 +94,21 @@ export function PermeablePavementVisualization({ isPlaying, speed, timelineValue
     drawSky(ctx, W, skyBot, t);
     drawBuildings(ctx, W, skyBot, roadTop, t);
     drawRoad(ctx, W, roadTop, roadBot, permLeft, permRight, regLeft, regRight, t, prog);
-    drawSidewalkAndDrain(ctx, W, roadBot, sidewalkBot, drainX, t, prog);
+    if (!fromTank) drawSidewalkAndDrain(ctx, W, roadBot, sidewalkBot, drainX, t, prog);
     drawRain(ctx, W, roadTop, t);
-    drawRunoffParticles(ctx, W, roadTop, roadBot, sidewalkBot, permLeft, permRight, regLeft, regRight, drainX, t, prog);
+    if (!fromTank) drawRunoffParticles(ctx, W, roadTop, roadBot, sidewalkBot, permLeft, permRight, regLeft, regRight, drainX, t, prog);
     drawAbsorptionParticles(ctx, W, roadTop, roadBot, permLeft, permRight, t, prog);
     drawUnderground(ctx, W, ugTop, pipeY, pipeH, H, drainX, t, prog);
+    // Underground feeder: excess from the smart tank runs into the stone base.
+    if (fromTank) {
+      const permMid = (permLeft + permRight) / 2;
+      drawSmartTankFeeder(
+        ctx,
+        [{ x: 2, y: ugTop + 16 }, { x: permMid, y: ugTop + 16 }, { x: permMid, y: ugTop + 36 }],
+        t, Math.min(prog / 0.8, 1),
+        { label: "⟶ EXCESS FROM SMART TANK" },
+      );
+    }
     drawLabels(ctx, W, roadTop, roadBot, sidewalkBot, permLeft, permRight, pipeY, pipeH, H, prog, t);
   }
 
@@ -365,6 +378,8 @@ export function PermeablePavementVisualization({ isPlaying, speed, timelineValue
       ctx.setLineDash([]);
     });
 
+    // Storm-drain inlet shaft + sewer pipe — only when fed from the storm drain.
+    if (!fromTank) {
     // Inlet shaft from drain down to pipe
     const shaftW = 20;
     const shaftTop = ugTop;
@@ -460,6 +475,7 @@ export function PermeablePavementVisualization({ isPlaying, speed, timelineValue
     // Pipe highlight
     ctx.fillStyle = "rgba(255,255,255,0.025)";
     ctx.beginPath(); rrPath(ctx, pipeLeft + 4, pipeY + 2, pipeWidth - 8, 4, 2); ctx.fill();
+    } // end sewer block
   }
 
   // ── LABELS & CALLOUTS ──────────────────────────────────────────────────
@@ -489,6 +505,8 @@ export function PermeablePavementVisualization({ isPlaying, speed, timelineValue
     ctx.fillText("runoff flows to drain", permRight + (W - permRight) / 2, roadTop + 22);
     ctx.textAlign = "left";
 
+    // Storm-drain + sewer-pipe labels — only when fed from the storm drain.
+    if (!fromTank) {
     // Storm drain label
     const drainX = Math.floor(W * 0.62);
     ctx.fillStyle = "rgba(0,200,220,0.45)"; ctx.font = `7px ${mono}`; ctx.textAlign = "center";
@@ -552,6 +570,7 @@ export function PermeablePavementVisualization({ isPlaying, speed, timelineValue
     const capPct = Math.round(wPct * 100);
     ctx.fillStyle = "rgba(0,215,130,0.82)"; ctx.font = `bold 9px ${mono}`;
     ctx.fillText(`SEWER PIPE — ${capPct}% CAPACITY   ✓ NORMAL`, pipeLeft, pipeBot + 14);
+    } // end sewer labels
 
     // Top-right mode label
     ctx.fillStyle = "rgba(0,215,240,0.92)"; ctx.font = `bold 9px ${mono}`; ctx.textAlign = "right";

@@ -15,6 +15,8 @@ import {
   Users,
   ChevronRight,
 } from "lucide-react";
+import { StrategyBadge, StrategyCallout } from "./StrategyPanel";
+import { TreatmentTrain } from "./TreatmentTrain";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -102,7 +104,7 @@ const ZONES: ZoneProfile[] = [
         icon: SOL_ICONS["tree-trench"],
         feasibility: "feasible",
         reason:
-          "Street tree trenches fit within existing ROW. Doubles canopy cover — currently only 28% — while capturing 8,640 gal per six-tree cell.",
+          "Street tree trenches fit within existing ROW. Doubles canopy cover — currently only 28% — while capturing ~3,000 gal per six-tree cell.",
       },
       {
         id: "smart-storage-network",
@@ -832,6 +834,7 @@ export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
                 <Layers size={11} />
                 {zone.imperviousPct}% Impervious
               </span>
+              <StrategyBadge zoneId={zone.id} />
               {zone.vulnerablePopulation >= 75 && (
                 <span
                   style={{
@@ -867,6 +870,12 @@ export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
             <StatPill label="Soil Infiltration" value={`${zone.soilInfiltration}/100`} color={zone.soilInfiltration >= 55 ? "#22c55e" : zone.soilInfiltration >= 38 ? "#f59e0b" : "#ef4444"} />
             <StatPill label="Storage Potential" value={`${zone.storagePotential}/100`} color={zone.storagePotential >= 70 ? "#22c55e" : "#f59e0b"} />
           </div>
+
+          {/* Land/soil-driven strategy */}
+          <StrategyCallout zoneId={zone.id} />
+
+          {/* Tank-led, multi-stage treatment train */}
+          <TreatmentTrain zoneId={zone.id} />
 
           {/* Area description */}
           <div

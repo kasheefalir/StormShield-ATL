@@ -29,6 +29,11 @@ export type GsiPlanningEstimate = {
   floodRiskScore: number;
 };
 
+// Atlanta's minor storm-drain/combined-sewer system is sized for the 10-year
+// design storm. Per NOAA Atlas 14, that is roughly a 2.5 in/hr peak intensity
+// for short-duration events. Rainfall above this overwhelms the pipes.
+const DESIGN_STORM_INTENSITY_IN_PER_HR = 2.5;
+
 // Planning estimate only. In production this should be replaced with EPA SWMM,
 // HEC-HMS, calibrated local IDF curves, surveyed drainage areas, pipe network
 // hydraulics, and City of Atlanta asset data.
@@ -40,7 +45,7 @@ export function estimateZoneHydrology(
   const runoffCoefficient = estimateRunoffCoefficient(zone);
   const runoffVolumeGallons =
     scenario.totalRainfallInches * drainageAreaSqFt * runoffCoefficient * 0.623;
-  const pipeCapacityGallons = estimatePipeCapacityGallons(zone);
+  const pipeCapacityGallons = estimatePipeCapacityGallons(zone, scenario);
   const waterEnteringPipe = runoffVolumeGallons;
   const overflowGallons = calculateOverflowGallons(waterEnteringPipe, pipeCapacityGallons);
   const peakFlowPercentOfCapacity =
@@ -126,12 +131,32 @@ export function estimateDrainageAreaSqFt(zone: AtlantaZone) {
   return Math.round(acres * 43560);
 }
 
-export function estimatePipeCapacityGallons(zone: AtlantaZone) {
-  const baseCapacity = zone.storageCapacityGallons * 0.58;
-  const agePenalty = 1 - zone.floodRiskScore / 340;
-  const complaintPenalty = Math.max(0.55, 1 - zone.drainageComplaintCount / 520);
+// Conveyance capacity of the zone's combined sewer / storm-drain trunk for THIS
+// event. The pipe was sized to carry the 10-year design storm (2.5 in/hr) off
+// the same contributing area, so its capacity is the design-storm runoff volume
+// over the event duration — de-rated by a condition factor so older,
+// complaint-heavy zones surcharge before reaching nominal design capacity.
+// e.g. South Downtown ≈ 2.7M gal/hr (~100 cfs through a 48" main).
+export function estimatePipeCapacityGallons(zone: AtlantaZone, scenario: RainfallScenario) {
+  const drainageAreaSqFt = estimateDrainageAreaSqFt(zone);
+  const runoffCoefficient = estimateRunoffCoefficient(zone);
+  const designStormVolume =
+    DESIGN_STORM_INTENSITY_IN_PER_HR *
+    scenario.durationHours *
+    drainageAreaSqFt *
+    runoffCoefficient *
+    0.623;
 
-  return Math.round(Math.max(35000, baseCapacity * agePenalty * complaintPenalty));
+  return Math.round(designStormVolume * pipeConditionFactor(zone));
+}
+
+// 1.0 = pipe carries exactly its design storm. Below 1.0 = aged/undersized
+// network that surcharges early (higher flood-risk, complaint-heavy zones);
+// above 1.0 = relatively newer infrastructure with some headroom.
+function pipeConditionFactor(zone: AtlantaZone) {
+  const agePenalty = ((zone.floodRiskScore - 70) / 200) * 0.5;
+  const complaintPenalty = zone.drainageComplaintCount / 1300;
+  return clamp(1.12 - agePenalty - complaintPenalty, 0.8, 1.1);
 }
 
 function estimateRunoffCoefficient(zone: AtlantaZone) {

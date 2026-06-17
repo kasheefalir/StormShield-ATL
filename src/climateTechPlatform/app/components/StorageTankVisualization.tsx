@@ -1,9 +1,11 @@
 import { useEffect, useRef, type MutableRefObject } from "react";
+import { drawSmartTankFeeder } from "./feederPipe";
 
 interface Props {
   isPlaying: boolean;
   speed: number;
   timelineValue: number;
+  source?: "storm-drain" | "smart-tank";
 }
 
 type Drop = { x: number; y: number; spd: number; len: number; op: number };
@@ -23,7 +25,8 @@ function rrPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, 
   ctx.closePath();
 }
 
-export function StorageTankVisualization({ isPlaying, speed, timelineValue }: Props) {
+export function StorageTankVisualization({ isPlaying, speed, timelineValue, source = "storm-drain" }: Props) {
+  const fromTank = source === "smart-tank";
   const cvRef      = useRef<HTMLCanvasElement>(null);
   const elRef      = useRef<HTMLDivElement>(null);
   const rafRef     = useRef(0);
@@ -59,7 +62,7 @@ export function StorageTankVisualization({ isPlaying, speed, timelineValue }: Pr
     }
     rafRef.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [isPlaying, speed, timelineValue]);
+  }, [isPlaying, speed, timelineValue, source]);
 
   function render(ctx: CanvasRenderingContext2D, W: number, H: number, t: number, prog: number) {
     ctx.clearRect(0, 0, W, H);
@@ -103,12 +106,17 @@ export function StorageTankVisualization({ isPlaying, speed, timelineValue }: Pr
     drawBuildings(ctx, W, roadTop, t);
     drawRain(ctx, W, roadTop, t);
     drawStreet(ctx, W, roadTop, roadH, sceneBot, sidewalkH, inlet1X, inlet2X, t, prog);
-    drawSurfaceRunoff(ctx, W, roadTop, roadH, sceneBot, inlet1X, inlet2X, t, prog);
+    if (!fromTank) drawSurfaceRunoff(ctx, W, roadTop, roadH, sceneBot, inlet1X, inlet2X, t, prog);
     drawUnderground(ctx, W, ugTop, H);
     drawCollectionPipes(ctx, W, ugTop, sceneBot, sidewalkH, inlet1X, inlet2X, tank1X, tank2X, tankW, tankY, t, prog);
     drawTanks(ctx, W, tank1X, tank2X, tankW, tankH, tankY, fillFrac, t, prog);
     drawReleasePipes(ctx, W, tank1X, tank2X, tankW, tankH, tankY, pipeY, pipeH, fillFrac, t);
-    drawSewerPipe(ctx, W, pipeLeft, pipeRight, pipeY, pipeH, fillFrac, t, prog);
+    if (fromTank) {
+      const c1 = tank1X + tankW / 2, c2 = tank2X + tankW / 2;
+      drawSmartTankFeeder(ctx, [{ x: 2, y: tankY - 22 }, { x: c1, y: tankY - 22 }, { x: c1, y: tankY }], t, fillFrac, { label: "⟶ EXCESS FROM SMART TANK" });
+      drawSmartTankFeeder(ctx, [{ x: c1, y: tankY - 22 }, { x: c2, y: tankY - 22 }, { x: c2, y: tankY }], t, fillFrac);
+    }
+    if (!fromTank) drawSewerPipe(ctx, W, pipeLeft, pipeRight, pipeY, pipeH, fillFrac, t, prog);
     spawnAndDrawParticles(ctx, partRef, t, prog, W, sceneBot, ugTop, inlet1X, inlet2X, tank1X, tank2X, tankW, tankY, tankH);
     drawLabels(ctx, W, H, roadTop, sceneBot, ugTop, tank1X, tank2X, tankW, tankY, tankH, pipeY, pipeH, fillFrac, storedGal, sewerLoadRed, overflowPrev, prog, t);
   }
@@ -588,6 +596,8 @@ export function StorageTankVisualization({ isPlaying, speed, timelineValue }: Pr
     ctx.fillText(statusText, tankMidX, tankY + tankH + 22);
     ctx.textAlign = "left";
 
+    // Sewer-pipe comparison labels — only when fed from the storm drain.
+    if (!fromTank) {
     // ── Ghost line label ──
     const ghostY = pipeY + pipeH * 0.10;
     ctx.fillStyle = "rgba(239,68,68,0.65)"; ctx.font = `bold 7px ${mono}`; ctx.textAlign = "right";
@@ -614,6 +624,7 @@ export function StorageTankVisualization({ isPlaying, speed, timelineValue }: Pr
       ctx.fillText(`${sewerLoadRed}%`, arrX+5, (ghostY+wY2)/2+4);
       ctx.fillText("less", arrX+5, (ghostY+wY2)/2+14);
     }
+    } // end sewer labels
 
     // ── Flow story label (top right) ──
     ctx.fillStyle = "rgba(0,215,240,0.92)"; ctx.font = `bold 9px ${mono}`; ctx.textAlign = "right";

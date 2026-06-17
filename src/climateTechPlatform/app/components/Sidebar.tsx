@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  LayoutDashboard,
   Map,
   Layers,
   Leaf,
@@ -12,7 +11,6 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "flood-map", label: "Flood Map", icon: Map },
   { id: "flood-zones", label: "Flood Zones", icon: Layers, active: true },
   { id: "solutions", label: "Solutions", icon: Leaf },

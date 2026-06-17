@@ -209,7 +209,9 @@ function scenarioFromRainRecord(
     label: labelFromRecord(record, aiDroughtShift),
     rainfallInchesPerHour: Math.max(0.02, record.rainfallInchesPerHour),
     totalRainfallInches: availableRainfall,
-    durationHours: record.precipitationInches >= 1.5 ? 6 : record.precipitationInches > 0 ? 4 : 2,
+    // Model storms as short, high-intensity 1-hour cloudbursts — the kind that
+    // exceed Atlanta's 2.5 in/hr drain design and drive peak flooding.
+    durationHours: record.precipitationInches > 0 ? 1 : 2,
     recentRainfallInches: record.recentRainfallInches,
     averageTemperature: record.averageTemperature,
     soilMoisturePercent: record.soilMoisturePercent,

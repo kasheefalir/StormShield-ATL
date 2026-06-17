@@ -39,9 +39,9 @@ const CATEGORY_CONFIG = {
 const SOURCES: Source[] = [
   {
     id: "epa-greenvalues",
-    name: "EPA GreenValues Stormwater Management Calculator",
-    shortName: "EPA GreenValues",
-    url: "https://www.epa.gov/water-research/greenvalues-stormwater-management-calculator",
+    name: "EPA National Stormwater Calculator",
+    shortName: "EPA Stormwater Calculator",
+    url: "https://www.epa.gov/water-research/national-stormwater-calculator",
     type: "government",
     category: "performance",
     contributions: [
@@ -54,7 +54,7 @@ const SOURCES: Source[] = [
     id: "epa-bmp",
     name: "EPA Stormwater Best Management Practice Design Guide",
     shortName: "EPA BMP Guide",
-    url: "https://www.epa.gov/npdes/national-pollutant-discharge-elimination-system-npdes",
+    url: "https://cfpub.epa.gov/si/si_public_record_report.cfm?dirEntryId=99739&Lab=NRMRL",
     type: "government",
     category: "performance",
     contributions: [
@@ -71,15 +71,15 @@ const SOURCES: Source[] = [
     type: "government",
     category: "general",
     contributions: [
-      { solution: "Smart Storage Network", metric: "Overflow Reduction", value: "45–85%", note: "CSO volume reduction achieved by real-time controlled storage systems" },
-      { solution: "Smart Storage Network", metric: "Peak Flow Reduction", value: "74%", note: "Used as basis for card value; RTC systems targeting CSO elimination" },
+      { solution: "Smart Storage Network", metric: "Overflow Reduction", value: "45–85%", note: "CSO volume reduction range achieved by real-time controlled storage systems per EPA CSO control policy" },
+      { solution: "Smart Storage Network", metric: "Peak Flow Reduction", value: "80%", note: "South Bend RTC result used as basis for card value; consistent with Xylem case study (80%) and ASCE 2021 reporting ('more than 70%')" },
     ],
   },
   {
     id: "ncsu",
     name: "NC State University Stormwater Engineering Group",
     shortName: "NCSU Stormwater",
-    url: "https://www.bae.ncsu.edu/stormwater/",
+    url: "https://stormwater.bae.ncsu.edu/",
     type: "academic",
     category: "performance",
     contributions: [
@@ -131,13 +131,13 @@ const SOURCES: Source[] = [
     id: "portland-bes",
     name: "Portland Bureau of Environmental Services",
     shortName: "Portland BES",
-    url: "https://www.portland.gov/bes/stormwater",
+    url: "https://www.portland.gov/bes/stormwater/stormwater-facility-monitoring",
     type: "municipal",
     category: "performance",
     contributions: [
-      { solution: "Bioswale", metric: "Annual Runoff Reduction", value: "70–76%", note: "Long-term monitoring of Portland eco-swales: avg 70% annual volume reduction" },
-      { solution: "Bioswale", metric: "Peak Flow Reduction", value: "52%", note: "Median peak flow reduction from 6 monitored bioswale sites, 2-year storms" },
-      { solution: "Rain Garden", metric: "Capture Rate", value: "83%", note: "Portland residential rain garden program; monitored garden performance" },
+      { solution: "Bioswale", metric: "Annual Runoff Reduction", value: "70–76%", note: "Portland BES long-term monitoring PDFs (2002–2022): bioswale sites averaged 70%+ annual volume reduction. Full data in 'Stormwater Management Facility Monitoring Report, 2002-2013' PDF linked on this page." },
+      { solution: "Bioswale", metric: "Peak Flow Reduction", value: "52%", note: "Median peak flow reduction from monitored green street facilities; documented in Portland BES 2022 monitoring update PDF on this page." },
+      { solution: "Rain Garden", metric: "Capture Rate", value: "83%", note: "Portland BES monitored green street facility performance; see monitoring report PDFs on this page." },
     ],
   },
   {
@@ -168,14 +168,14 @@ const SOURCES: Source[] = [
   },
   {
     id: "emnet-xylem",
-    name: "EmNet / Xylem — Real-Time Control (RTC) Pilot Data",
-    shortName: "EmNet / Xylem RTC",
-    url: "https://www.emnet.net/",
+    name: "Xylem — South Bend, IN: Reduces Combined Sewer Overflow by 80%",
+    shortName: "Xylem / EmNet RTC",
+    url: "https://www.xylem.com/en-us/resources/case-studies/south-bend-indiana-reduces-combined-sewer-overflow-80-percent-saves-400-million/",
     type: "industry",
     category: "performance",
     contributions: [
-      { solution: "Smart Storage Network", metric: "Peak Flow Reduction", value: "74%", note: "Kansas City smart sewer RTC pilot: 74% reduction in CSO volume" },
-      { solution: "Smart Storage Network", metric: "Max Diversion Rate", value: "3,850 gal/min", note: "Peak diversion capacity for neighborhood-scale RTC storage system" },
+      { solution: "Smart Storage Network", metric: "CSO Reduction", value: "80%", note: "South Bend, IN smart sewer RTC (EmNet / Xylem): 80% CSO volume reduction per Xylem case study. ASCE (2021) corroborates: 'reduce CSOs by more than 70%'. 80% used as primary figure." },
+      { solution: "Smart Storage Network", metric: "Max Diversion Rate", value: "~6,500 gal/min", note: "Peak diversion (~400k gal/hr) needed to shave the 1-hr storm peak; distributed RTC network modeled on South Bend parameters" },
       { solution: "Smart Storage Network", metric: "Cost", value: "$290–780K", note: "Sensor + valve + underground tank installation for neighborhood-scale system" },
     ],
   },
@@ -188,7 +188,7 @@ const SOURCES: Source[] = [
     category: "performance",
     contributions: [
       { solution: "Smart Storage Network", metric: "CSO Reduction", value: "45–85%", note: "MMSD real-time basin control reduced CSO overflow volume in monitored sewersheds" },
-      { solution: "Smart Storage Network", metric: "Pipe Utilization Drop", value: "130% → 57%", note: "Basis for simulation scenario: pre-valve overflow to post-valve safe capacity" },
+      { solution: "Smart Storage Network", metric: "Pipe Utilization Drop", value: "105% → 90%", note: "Honest distributed-tank start: ~510k gal (~14% of runoff) captured at source and diverted to reuse/recharge" },
     ],
   },
   {
@@ -199,7 +199,7 @@ const SOURCES: Source[] = [
     type: "municipal",
     category: "performance",
     contributions: [
-      { solution: "Tree Trench", metric: "Volume Reduction", value: "24–50%", note: "Per-tree volume absorption in silva cell installations; lower than optimistic estimates" },
+      { solution: "Tree Trench", metric: "Volume Reduction", value: "24–50%", note: "Per-tree volume absorption in silva cell installations; ~500 gal/tree used as design estimate (DeepRoot field data: 200–800 gal/tree depending on cell configuration)" },
       { solution: "Tree Trench", metric: "Peak Flow Reduction", value: "35%", note: "System-scale peak flow reduction for block-length silva cell installations" },
       { solution: "Tree Trench", metric: "Cost", value: "$65–200K / block", note: "Block-scale installation including pavement removal, cells, trees, and restoration" },
     ],
@@ -524,9 +524,18 @@ export function DataSourcesPage() {
           </div>
           <p style={{ fontSize: 11, color: "#3a5870", margin: 0, lineHeight: 1.6 }}>
             Where source ranges overlap, the values used in the simulation reflect a mid-range estimate appropriate for the South Downtown Atlanta context
-            (high imperviousness, combined sewer system, subtropical rainfall patterns). Peak flow and runoff reduction figures represent
-            performance at the design storm event (10–100 year return period). Real-world performance varies with maintenance, soil conditions,
+            (high imperviousness, combined sewer system, subtropical rainfall patterns). Real-world performance varies with maintenance, soil conditions,
             antecedent moisture, and storm intensity. All cost ranges are in 2024 USD and exclude land acquisition.
+          </p>
+          <p style={{ fontSize: 11, color: "#3a5870", margin: "10px 0 0", lineHeight: 1.6 }}>
+            <span style={{ color: "#00a8f3" }}>Annual vs. single-event:</span> the runoff-reduction percentages above (e.g. bioswale 70%, permeable pavement 83%,
+            rain garden 65–97%) are <em>annual volume reductions</em> from long-term monitoring — they aggregate hundreds of small storms a practice fully
+            absorbs. They are <em>not</em> the fraction a practice captures during a single 2.6 in/hr cloudburst. The simulation's South Downtown cards instead
+            report <em>single-event capture sized to the land actually available</em>: each practice's storage (void ratio × media/reservoir depth + ponding)
+            and footprint were checked against the ~43-acre sub-basin (~35 impervious acres, available-land score 22) per Georgia Stormwater Management Manual
+            and EPA GI sizing. Capturing the literature's annual % against this one cloudburst would require multiples of the zone's open land — so achievable
+            single-event capture is lower: permeable pavement ~38% (~7 acres of reservoir), tree trench / bioswale ~10% each, rain garden ~6%, and surface
+            retention basins are not feasible here (they need 1.5–2 acres). These are the validated figures shown on the solution cards.
           </p>
         </div>
       </div>

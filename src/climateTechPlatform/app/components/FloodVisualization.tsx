@@ -4,6 +4,7 @@ import { TreeTrenchVisualization } from "./TreeTrenchVisualization";
 import { PermeablePavementVisualization } from "./PermeablePavementVisualization";
 import { SmartStorageNetworkVisualization } from "./SmartStorageNetworkVisualization";
 import { RetentionBasinVisualization } from "./RetentionBasinVisualization";
+import { drawSmartTankFeeder } from "./feederPipe";
 
 function rrPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
   const rad = Math.min(r, w / 2, h / 2);
@@ -26,9 +27,13 @@ interface FloodVisualizationProps {
   timelineValue: number;
   activeStep: number;
   selectedSolution?: string | null;
+  // "smart-tank" hides the storm-drain inlet + sewer pipe (used in the treatment train,
+  // where the bioswale is fed by the smart tank's excess water).
+  source?: "storm-drain" | "smart-tank";
 }
 
-export function FloodVisualization({ mode, isPlaying, speed, timelineValue, selectedSolution }: FloodVisualizationProps) {
+export function FloodVisualization({ mode, isPlaying, speed, timelineValue, selectedSolution, source = "storm-drain" }: FloodVisualizationProps) {
+  const fromTank = source === "smart-tank";
   // All hooks must be declared before any conditional return (Rules of Hooks)
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -126,7 +131,17 @@ export function FloodVisualization({ mode, isPlaying, speed, timelineValue, sele
       drawHouses(ctx, W, groundY);
       drawVehicles(ctx, W, roadY, roadH, floodLevel);
       drawRain(ctx, W, groundY, t, isGSI ? 0.5 : 1.0);
-      drawUnderground(ctx, W, undergroundTop, H, floodLevel, overload, t, isGSI);
+      // In smart-tank mode the storm-drain shaft + sewer pipe are hidden — the
+      // bioswale is fed by the smart tank's excess water (treatment-train stage).
+      if (!fromTank) drawUnderground(ctx, W, undergroundTop, H, floodLevel, overload, t, isGSI);
+      if (fromTank && isGSI) {
+        drawSmartTankFeeder(
+          ctx,
+          [{ x: 2, y: undergroundTop + 16 }, { x: W * 0.5, y: undergroundTop + 16 }, { x: W * 0.5, y: swaleY + swaleH - 2 }],
+          t, Math.min(floodLevel, 1),
+          { label: "⟶ EXCESS FROM SMART TANK", color: "0,200,140" },
+        );
+      }
 
       if (overload && floodLevel > 0.3) drawFloodingWater(ctx, W, roadY, roadH, curbY, floodLevel, t);
       if (overload && floodLevel > 0.6) drawOverflowWarning(ctx, W, groundY, floodLevel, t);
@@ -443,6 +458,8 @@ export function FloodVisualization({ mode, isPlaying, speed, timelineValue, sele
         });
       }
 
+      // Storm drain inlet + surface flow to it — only when fed from the storm drain.
+      if (!fromTank) {
       // Storm drain inlet
       const inletX = W * 0.47;
       ctx.fillStyle = "#1a2535";
@@ -481,6 +498,7 @@ export function FloodVisualization({ mode, isPlaying, speed, timelineValue, sele
       ctx.lineTo(inletX + 6, curbY - 1);
       ctx.stroke();
       ctx.setLineDash([]);
+      } // end storm-drain inlet block
     }
 
     function drawClouds(ctx: CanvasRenderingContext2D, t: number, W: number, groundY: number) {
@@ -777,8 +795,8 @@ export function FloodVisualization({ mode, isPlaying, speed, timelineValue, sele
         ctx.stroke();
       }
 
-      // Water fill: overload fills to 110% (overflow), GSI caps at 30% (bioswale captures 70% of runoff)
-      const waterPct = Math.min(floodLevel * (overload ? 1.1 : 0.30), 1);
+      // Water fill: overload fills to 105% (overflow), GSI caps at 30% (bioswale captures 70% of runoff)
+      const waterPct = Math.min(floodLevel * (overload ? 1.1 : 0.30), overload ? 1.05 : 1);
       const waterH2 = pipeH * waterPct;
       const waterY2 = pipeY + pipeH - waterH2;
       if (waterPct > 0.02) {
@@ -843,7 +861,7 @@ export function FloodVisualization({ mode, isPlaying, speed, timelineValue, sele
       }
 
       // Pipe status label
-      const capPct = Math.round(Math.min(waterPct * 100, 100));
+      const capPct = Math.round(Math.min(waterPct * 100, overload ? 105 : 100));
       const pipeLabel = overload
         ? `SEWER PIPE — ${capPct}% CAPACITY   ⚠ OVERLOADED`
         : `SEWER PIPE — ${capPct}% CAPACITY   ✓ NORMAL`;
@@ -907,7 +925,7 @@ export function FloodVisualization({ mode, isPlaying, speed, timelineValue, sele
 
     animFrameRef.current = requestAnimationFrame(loop);
     return () => { if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current); };
-  }, [mode, isPlaying, speed, timelineValue]);
+  }, [mode, isPlaying, speed, timelineValue, source]);
 
   if (isRainGarden) {
     return <RainGardenVisualization isPlaying={isPlaying} speed={speed} timelineValue={timelineValue} />;

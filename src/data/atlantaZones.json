@@ -28,8 +28,8 @@
     "storageCapacityGallons": 185000,
     "nearbyAssets": ["Proctor Creek", "Maddox Park", "linear greenway"],
     "recommendedGsi": {
-      "primary": "bioswale",
-      "secondary": ["wetland", "smart-storage-network", "tree-trench"]
+      "primary": "smart-storage-network",
+      "secondary": ["bioswale", "wetland", "tree-trench"]
     }
   },
   {
@@ -61,8 +61,8 @@
     "storageCapacityGallons": 120000,
     "nearbyAssets": ["rail viaducts", "street drains", "civic plazas"],
     "recommendedGsi": {
-      "primary": "permeable-pavement",
-      "secondary": ["smart-storage-network", "tree-trench", "rain-garden"]
+      "primary": "smart-storage-network",
+      "secondary": ["permeable-pavement", "tree-trench", "rain-garden"]
     }
   },
   {
@@ -94,8 +94,8 @@
     "storageCapacityGallons": 210000,
     "nearbyAssets": ["Historic Fourth Ward Park", "BeltLine", "detention pond"],
     "recommendedGsi": {
-      "primary": "retention-pond",
-      "secondary": ["rain-garden", "smart-storage-network", "tree-trench"]
+      "primary": "smart-storage-network",
+      "secondary": ["retention-pond", "rain-garden", "tree-trench"]
     }
   },
   {
@@ -127,8 +127,8 @@
     "storageCapacityGallons": 160000,
     "nearbyAssets": ["Cook Park", "Proctor Creek tributaries", "tree canopy gaps"],
     "recommendedGsi": {
-      "primary": "rain-garden",
-      "secondary": ["bioswale", "tree-trench", "smart-storage-network"]
+      "primary": "smart-storage-network",
+      "secondary": ["rain-garden", "bioswale", "tree-trench"]
     }
   },
   {
@@ -160,8 +160,8 @@
     "storageCapacityGallons": 98000,
     "nearbyAssets": ["Piedmont Park", "street tree network", "parking decks"],
     "recommendedGsi": {
-      "primary": "tree-trench",
-      "secondary": ["permeable-pavement", "smart-storage-network", "tree-trench"]
+      "primary": "smart-storage-network",
+      "secondary": ["tree-trench", "permeable-pavement", "rain-garden"]
     }
   },
   {
@@ -226,8 +226,8 @@
     "storageCapacityGallons": 260000,
     "nearbyAssets": ["South River tributaries", "industrial parcels", "wetland buffers"],
     "recommendedGsi": {
-      "primary": "wetland",
-      "secondary": ["retention-pond", "smart-storage-network", "permeable-pavement"]
+      "primary": "smart-storage-network",
+      "secondary": ["wetland", "retention-pond", "permeable-pavement"]
     }
   }
 ]

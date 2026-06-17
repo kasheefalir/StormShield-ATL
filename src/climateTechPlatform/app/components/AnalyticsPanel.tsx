@@ -137,155 +137,154 @@ interface SolutionDesc {
 const SOLUTION_DESCRIPTIONS: Record<string, SolutionDesc> = {
   bioswale: {
     statusVerb: "INTERCEPTING",
-    statusSub: "Bioswale — curb-to-soil pathway",
+    statusSub: "Bioswale — curb-edge interception (limited ROW)",
     accentColor: "#00c878",
     icon: <Sprout size={18} color="#00c878" />,
-    pipeMax: 50,
-    flowMax: 7020,
-    floodMax: 16,
+    pipeMax: 95,
+    flowMax: 2538000,
+    floodMax: 38,
     what:
-      "Vegetated bioswales intercept surface runoff at the curb edge before it reaches the storm drain inlet. Engineered soil (12–18\" amended layer) achieves 1–5 in/hr infiltration, absorbing the 2.4 in/hr storm event. Plants slow flow velocity by 60–80%, giving water time to percolate. 70% of runoff is captured in the bioswale cell, cutting peak sewer flow by 52% and dropping pipe utilization from 105% to ~50%.",
+      "A vegetated bioswale corridor threads the limited curb-edge right-of-way, intercepting street runoff before it reaches the combined-sewer inlets. Engineered soil (12–18\" amended layer, 1–5 in/hr) plus ~9\" of ponding stores roughly 8 gal/sq ft of swale surface. Capturing ~10% of this storm's 2.8M-gal runoff (~282,000 gal) needs about 1.1 miles of continuous 6-ft-wide swale (~35,000 sq ft). In dense South Downtown that is near the physical ceiling — curb ROW competes with loading zones and taxi lanes — so the bioswale is a supporting practice: it trims peak sewer flow ~10%, easing the 48\" main from 105% to ~95% (still tight).",
     metricsFn: (p) => [
-      { label: "Bioswale Area", value: "~3,200 sq ft", status: "low" },
-      { label: "Soil Infiltration", value: "2.4 in/hr", status: "low" },
-      { label: "Plant Cover", value: "Native / dense", status: "low" },
-      { label: "Runoff Captured", value: `${Math.round(p * 70)}%`, status: "low" },
+      { label: "Gallons Captured", value: `${Math.round(p * 282000).toLocaleString()} gal`, status: "low" },
+      { label: "Soil Infiltration", value: "1–5 in/hr", status: "low" },
+      { label: "Swale Length", value: "~1.1 mi × 6 ft", status: "medium" },
+      { label: "Runoff Captured", value: `${Math.round(p * 10)}%`, status: "medium" },
       {
         label: "Remaining to Sewer",
-        value: `${Math.round((1 - p * 0.7) * 100)}%`,
-        status: "low",
+        value: `${Math.round((1 - p * 0.1) * 100)}%`,
+        status: "medium",
       },
     ],
     impactFn: (p, pipe) =>
-      `52% peak flow reduction. Pipe drops from 105% → ${pipe}% capacity. ${Math.round(p * 70)}% of surface runoff intercepted at curb. Zero overflow.`,
+      `~${Math.round(p * 10)}% of runoff intercepted at the curb. Pipe eases 105% → ${pipe}% — still near capacity. Curb ROW caps the bioswale near 10%; it works as a supporting practice, not a primary one.`,
   },
 
   "rain-garden": {
     statusVerb: "CAPTURING",
-    statusSub: "4 rain gardens active — residential network",
+    statusSub: "Rain garden cells — constrained by land & soil",
     accentColor: "#00c878",
     icon: <Leaf size={18} color="#00c878" />,
-    pipeMax: 37,
-    flowMax: 8190,
-    floodMax: 12,
+    pipeMax: 99,
+    flowMax: 2650800,
+    floodMax: 39,
     what:
-      "Distributed rain gardens capture runoff at 4 residential sites across the zone. Each 280 sq ft garden is engineered with native plantings and amended soil achieving 1.8 in/hr infiltration. During a 2.4 in/hr storm, the gardens collectively intercept 22,000 gallons — 65% of sewer-bound runoff — before it reaches the combined sewer inlet. This drops the 48\" main from 105% utilization to 37%, eliminating overflow risk entirely.",
+      "Distributed rain-garden (bioretention) cells capture roof and plaza runoff at the source. But South Downtown's native soil infiltrates poorly (score 32, ~0.3 in/hr) and open pervious ground is almost nonexistent (available-land score 22). Capturing even ~6% of the 2.8M-gal storm (~169,000 gal) takes ~0.5 acre of engineered bioretention — 9\" ponding over 24\" of imported media, ~8 gal/sq ft. The 65–97% volume reductions often cited are annual figures for soil-rich sites; matching that here would demand ~5 acres of rain gardens this zone does not have. Realistically a marginal practice: pipe barely moves from 105% to ~99%.",
     metricsFn: (p) => [
-      { label: "Gallons Captured", value: `${Math.round(p * 22000).toLocaleString()} gal`, status: "low" },
-      { label: "Infiltration Rate", value: `${(p * 1.82).toFixed(1)} in/hr`, status: "low" },
-      { label: "Sewer Load Reduction", value: `${Math.round(p * 65)}%`, status: "low" },
-      { label: "Gardens Active", value: "4 sites", status: "low" },
-      { label: "Avg. Garden Area", value: "280 sq ft", status: "low" },
+      { label: "Gallons Captured", value: `${Math.round(p * 169000).toLocaleString()} gal`, status: "low" },
+      { label: "Bioretention Area", value: "~0.5 acre", status: "medium" },
+      { label: "Native Soil Infil.", value: "~0.3 in/hr (score 32)", status: "high" },
+      { label: "Runoff Captured", value: `${Math.round(p * 6)}%`, status: "medium" },
+      { label: "Media", value: "Imported / amended", status: "low" },
       {
         label: "Remaining Sewer Load",
-        value: `${Math.round((1 - p * 0.65) * 100)}%`,
-        status: p > 0.5 ? "low" : "medium",
+        value: `${Math.round((1 - p * 0.06) * 100)}%`,
+        status: "high",
       },
     ],
     impactFn: (p, pipe) =>
-      `4 rain gardens capture ${Math.round(p * 22000).toLocaleString()} gallons of runoff at ${(p * 1.82).toFixed(1)} in/hr. Sewer load reduced by ${Math.round(p * 65)}% — pipe at ${pipe}% capacity. No overflow.`,
+      `Rain gardens capture ~${Math.round(p * 169000).toLocaleString()} gal across ~0.5 acre of cells. Low soil infiltration (score 32) and scarce land (score 22) cap this near 6% — pipe stays at ${pipe}%. Best used as a pre-filter, not a primary practice here.`,
   },
 
   "tree-trench": {
     statusVerb: "ABSORBING",
-    statusSub: "6 street trees + underground trenches",
+    statusSub: "Silva Cell tree trench — under-sidewalk storage",
     accentColor: "#00dc8a",
     icon: <TreePine size={18} color="#00dc8a" />,
-    pipeMax: 68,
-    flowMax: 15210,
-    floodMax: 22,
+    pipeMax: 95,
+    flowMax: 2538000,
+    floodMax: 38,
     what:
-      "Six street trees with 480 linear feet of underground Silva Cells form a root-zone storage network beneath the sidewalk. Each tree's structural soil profile holds 1,440 gallons of storm runoff, slowly absorbed through the root system over 24–48 hours. Together they capture 8,640 gallons per storm event, reducing peak sewer flow by 35% and lowering pipe utilization from 105% to 68%. The canopy also reduces summer surface temperatures by up to 4.8°F.",
+      "Street trees set in continuous Silva Cells form a root-zone storage gallery beneath the sidewalks — no buildable land consumed. At ~500 gal per tree (King County / DeepRoot field range 200–800), capturing ~10% of the storm (~282,000 gal) takes about 560 trees along roughly 3 miles of sidewalk trench, drawn down over 24–48 hours. That fits the ROW and would more than double the zone's thin 12% canopy, but sidewalk length caps capture near 10–12%. Peak sewer flow drops ~10%, easing the 48\" main from 105% to ~95%.",
     metricsFn: (p) => [
-      { label: "Runoff Captured", value: `${Math.round(p * 8640).toLocaleString()} gal`, status: "low" },
-      { label: "Urban Cooling", value: `${(p * 4.8).toFixed(1)}°F`, status: "low" },
-      { label: "Sewer Flow Reduction", value: `${Math.round(p * 35)}%`, status: "low" },
-      { label: "Tree Health Boost", value: `${Math.round(p * 78)}%`, status: "low" },
-      { label: "Street Trees", value: "6 trees", status: "low" },
-      { label: "Silva Cell Storage", value: "8,640 gal max", status: "low" },
+      { label: "Runoff Captured", value: `${Math.round(p * 282000).toLocaleString()} gal`, status: "low" },
+      { label: "Silva Cell Trees", value: `${Math.round(p * 560)}`, status: "low" },
+      { label: "Trench Length", value: "~3.0 mi", status: "medium" },
+      { label: "Urban Cooling", value: `${(p * 4.0).toFixed(1)}°F`, status: "low" },
+      { label: "Sewer Flow Reduction", value: `${Math.round(p * 10)}%`, status: "medium" },
+      { label: "Drawdown Time", value: "24–48 hrs", status: "low" },
       {
         label: "Remaining Sewer Load",
-        value: `${Math.round((1 - p * 0.35) * 100)}%`,
-        status: p > 0.7 ? "low" : "medium",
+        value: `${Math.round((1 - p * 0.1) * 100)}%`,
+        status: "medium",
       },
     ],
     impactFn: (p, pipe) =>
-      `Street trees capture ${Math.round(p * 8640).toLocaleString()} gallons in root-zone storage, cool the street by ${(p * 4.8).toFixed(1)}°F, and reduce sewer demand by ${Math.round(p * 35)}% — pipe at ${pipe}% capacity. No overflow.`,
+      `~${Math.round(p * 560)} Silva-Cell trees store ${Math.round(p * 282000).toLocaleString()} gal in root-zone media and cool the street ${(p * 4.0).toFixed(1)}°F. Sewer flow down ~${Math.round(p * 10)}% — pipe at ${pipe}%. Canopy is the main draw; capture caps near 10%.`,
   },
 
   "permeable-pavement": {
     statusVerb: "INFILTRATING",
-    statusSub: "2 permeable pavement sections active",
+    statusSub: "Permeable pavement — parking, plazas, low-speed lanes",
     accentColor: "#00d4dc",
     icon: <Layers size={18} color="#00d4dc" />,
-    pipeMax: 30,
-    flowMax: 3978,
-    floodMax: 10,
+    pipeMax: 65,
+    flowMax: 1748400,
+    floodMax: 26,
     what:
-      "Two sections of permeable asphalt/concrete pavement — totaling 8,400 sq ft — allow stormwater to pass through the surface into a crushed stone aggregate base. The 18\" void layer holds up to 28,000 gallons with a 32% void ratio, achieving 3.2 in/hr effective infiltration. This eliminates 83% of surface runoff that would otherwise flow directly to the storm drain, cutting peak sewer flow by 72% and keeping the 48\" combined main at just 30% capacity.",
+      "Permeable asphalt/concrete over an open-graded stone reservoir is the strongest fit here, because the zone is mostly pavement. An 18\" stone base at 32% void stores ~3.6 gal/sq ft, so capturing ~38% of the 2.8M-gal storm (~1.07M gal) takes about 7 acres of permeable surface — roughly 20% of the zone's ~35 impervious acres, drawn from parking decks, civic plazas, and low-speed lanes. Native soil infiltrates slowly (score 32), so the reservoir is under-drained: it detains and meters flow rather than fully infiltrating. Peak sewer flow falls ~38%, bringing the 48\" main from 105% down to ~65%.",
     metricsFn: (p) => [
-      { label: "Runoff Reduction", value: `${Math.round(p * 83)}%`, status: "low" },
-      { label: "Aggregate Storage", value: `${Math.round(p * 28000).toLocaleString()} gal`, status: "low" },
-      { label: "Infiltration Rate", value: `${(p * 3.2).toFixed(1)} in/hr`, status: "low" },
-      { label: "Peak Flow Reduction", value: `${Math.round(p * 72)}%`, status: "low" },
-      { label: "Permeable Area", value: "~8,400 sq ft", status: "low" },
-      { label: "Void Ratio", value: "32%", status: "low" },
+      { label: "Runoff Reduction", value: `${Math.round(p * 38)}%`, status: "low" },
+      { label: "Permeable Area", value: "~7 acres", status: "low" },
+      { label: "Aggregate Storage", value: `${Math.round(p * 1071600).toLocaleString()} gal`, status: "low" },
+      { label: "Reservoir", value: "18\" stone @ 32% void", status: "low" },
+      { label: "Peak Flow Reduction", value: `${Math.round(p * 38)}%`, status: "low" },
       {
         label: "Remaining Sewer Load",
-        value: `${Math.round((1 - p * 0.83) * 100)}%`,
+        value: `${Math.round((1 - p * 0.38) * 100)}%`,
         status: p > 0.5 ? "low" : "medium",
       },
     ],
     impactFn: (p, pipe) =>
-      `Permeable surfaces absorb ${Math.round(p * 83)}% of runoff, storing ${Math.round(p * 28000).toLocaleString()} gallons at ${(p * 3.2).toFixed(1)} in/hr infiltration. Peak flow cut by ${Math.round(p * 72)}%. Sewer pipe at ${pipe}% capacity.`,
+      `Permeable surfaces absorb ~${Math.round(p * 38)}% of runoff, storing ${Math.round(p * 1071600).toLocaleString()} gal in ~7 acres of stone reservoir. Pipe drops 105% → ${pipe}%. The most viable single practice — pavement is the one resource this zone has in abundance.`,
   },
 
   "smart-storage-network": {
     statusVerb: "DIVERTING",
-    statusSub: "Smart Storage — RTC valve network",
+    statusSub: "Distributed smart tanks — capture + reuse",
     accentColor: "#00a8f3",
     icon: <Zap size={18} color="#00a8f3" />,
-    pipeMax: 57,
-    flowMax: 6084,
-    floodMax: 18,
+    pipeMax: 90,
+    flowMax: 2420000,
+    floodMax: 45,
     what:
-      "Real-time control valves read pressure sensors across the sewer network and divert peak flows into distributed storage before the system backs up. Used in Milwaukee, South Bend, and Columbus, RTC shifts water in time rather than space. At peak storm intensity, 3,850 gal/min is diverted, dropping pipe utilization from 130% (active overflow) to 57% within minutes of valve activation.",
+      "A distributed network of ~6 smart tanks (~85,000 gal each, ~510k gal total) sits at the worst inlets across the sub-basin. Pressure sensors trigger valves that capture the peak overshoot at the source — diverting it OUT of the combined sewer to reuse (irrigation, non-potable) and groundwater recharge rather than back into the pipe. Capturing ~400–510k gallons (~14% of the 2.6 in/hr storm's runoff) drops the 48\" main from 105% to an honest, safe 90% — then the tanks slow-release to reuse over the hours after the storm. Used in Milwaukee, South Bend, and Columbus (EPA RTC pilots).",
     metricsFn: (p) => [
-      { label: "Flow Diverted", value: `${Math.round(p * 3850).toLocaleString()} gal/min`, status: "low" },
-      { label: "Storage Used", value: `${(p * 2.1).toFixed(1)}M gal`, status: "low" },
-      { label: "Peak Flow Reduction", value: `${Math.round(p * 74)}%`, status: "low" },
-      { label: "Sensor Nodes", value: "12 active", status: "low" },
+      { label: "Flow Diverted", value: `${Math.round(p * 6500).toLocaleString()} gal/min`, status: "low" },
+      { label: "Diverted to Reuse", value: `${Math.round(p * 510000).toLocaleString()} gal`, status: "low" },
+      { label: "Peak Flow Reduction", value: `${Math.round(p * 14)}%`, status: "low" },
+      { label: "Tank Network", value: "6 tanks · 2 clusters", status: "low" },
       { label: "Valve Response", value: "< 90 sec", status: "low" },
       {
-        label: "Remaining Pipe Load",
-        value: `${Math.round(57 + (1 - p) * 48)}%`,
+        label: "Pipe Load",
+        value: `${Math.round(105 - p * 15)}%`,
         status: p > 0.6 ? "low" : "medium",
       },
     ],
     impactFn: (p, pipe) =>
-      `${Math.round(p * 74)}% peak flow diverted. Pipe drops from 130% → ${pipe}% capacity. ${Math.round(p * 3850).toLocaleString()} gal/min redirected through valve network. Zero overflow projected.`,
+      `${Math.round(p * 14)}% of peak flow captured at the source and diverted to reuse/recharge — OUT of the combined sewer. Pipe drops from 105% → ${pipe}% capacity. ${Math.round(p * 510000).toLocaleString()} gallons stored across ~6 tanks. Overflow eliminated.`,
   },
 
   "retention-basin": {
     statusVerb: "DETAINING",
-    statusSub: "Retention Basin — controlled detention",
+    statusSub: "Detention vault — surface basin not feasible in-zone",
     accentColor: "#3b82f6",
     icon: <Waves size={18} color="#3b82f6" />,
-    pipeMax: 61,
-    flowMax: 5616,
-    floodMax: 20,
+    pipeMax: 82,
+    flowMax: 2199600,
+    floodMax: 33,
     what:
-      "The retention basin captures runoff from the entire contributing drainage area, detaining up to 6,400 gal/min of peak inflow in a surface or subsurface pond. Water releases slowly through a controlled outlet over 24–72 hours, preventing the downstream 48\" combined sewer from being overwhelmed. Georgia Stormwater Manual sizing delivers 76% peak flow reduction and 65% total runoff volume cut.",
+      "A true surface retention basin would need 1.5–2 acres of open parcel to detain a meaningful share of the 2.8M-gal storm — land South Downtown does not have (available-land score 22, the lowest of any zone). The feasible substitute is a subsurface detention vault: ~0.6M gal (~22%) held under a plaza or street in a ~0.2-acre buried structure, released over 24–72 hours through a gated riser. That eases the 48\" main from 105% to ~82%. A full basin at 50–65% capture belongs in land-rich zones — Old Fourth Ward's existing Historic Fourth Ward Park pond or Airport South (land score 72) — not here.",
     metricsFn: (p) => [
-      { label: "Inflow Detained", value: `${Math.round(p * 6400).toLocaleString()} gal/min`, status: "low" },
-      { label: "Basin Volume Used", value: `${(p * 4.8).toFixed(1)}M gal`, status: "low" },
-      { label: "Peak Flow Reduction", value: `${Math.round(p * 76)}%`, status: "low" },
-      { label: "Total Vol. Reduction", value: `${Math.round(p * 65)}%`, status: "low" },
+      { label: "Inflow Detained", value: `${Math.round(p * 620400).toLocaleString()} gal`, status: "low" },
+      { label: "Vault Volume", value: `${(p * 0.6).toFixed(2)}M gal`, status: "low" },
+      { label: "Footprint", value: "~0.2 acre (subsurface)", status: "medium" },
+      { label: "Peak Flow Reduction", value: `${Math.round(p * 22)}%`, status: "low" },
       { label: "Outlet Control", value: "Gated riser", status: "low" },
       { label: "Drawdown Time", value: "24–72 hrs", status: "low" },
     ],
     impactFn: (p, pipe) =>
-      `76% peak flow reduction. Pipe at ${pipe}% capacity. ${Math.round(p * 65)}% less total runoff volume reaching sewer. Basin detaining ${(p * 4.8).toFixed(1)}M gallons with controlled release.`,
+      `Subsurface vault detains ~${Math.round(p * 620400).toLocaleString()} gal, easing pipe 105% → ${pipe}%. A surface basin (50–65% capture) needs 1.5–2 acres unavailable here — site it in Old Fourth Ward or Airport South instead.`,
   },
 };
 
@@ -294,28 +293,28 @@ const DEFAULT_GSI_DESCRIPTION: SolutionDesc = {
   statusSub: "With green infrastructure",
   accentColor: "#00d4b4",
   icon: <Activity size={18} color="#00d4b4" />,
-  pipeMax: 38,
-  flowMax: 8100,
-  floodMax: 18,
+  pipeMax: 50,
+  flowMax: 1353600,
+  floodMax: 20,
   what:
-    "Green stormwater infrastructure is active across this drainage zone. Bioswales intercept curb runoff, rain gardens absorb roof discharge, and permeable pavement infiltrates road surface water. Together they capture 42–83% of runoff at the source, delaying peak flow arrival and keeping the 48\" combined sewer below capacity during the current 2.4 in/hr storm event.",
+    "Green stormwater infrastructure is layered across the zone: ~7 acres of permeable pavement on parking decks and plazas, Silva-Cell tree trenches under the sidewalks, curb bioswales where ROW allows, and RTC tanks capturing peak overshoot to reuse. Stacked (with some overlap), they capture roughly 50–55% of the 2.8M-gal cloudburst at the source — enough to bring the 48\" combined main from 105% down to ~50% and hold off overflow. Permeable pavement and smart storage do the heavy lifting; land-hungry practices (rain gardens, surface basins) are minor contributors in this dense zone.",
   metricsFn: () => [
     { label: "Impervious Surface", value: "81%", status: "high" },
-    { label: "Rainfall Event", value: "2.4 in/hr", status: "high" },
+    { label: "Rainfall Event", value: "2.6 in/hr", status: "high" },
     { label: "Infrastructure Age", value: "95–130 yrs", status: "medium" },
     { label: "Elevation Risk", value: "Moderate", status: "medium" },
     { label: "GSI Coverage", value: "34%", status: "low" },
   ],
   impactFn: (_, pipe) =>
-    `Peak flow reduced by 63%. System operating at ${pipe}% capacity. Zero overflow events projected.`,
+    `Peak flow reduced ~52%. System operating at ${pipe}% capacity — overflow held off, but only because permeable pavement + smart storage carry the load; vegetated practices alone would leave the pipe near 95%.`,
 };
 
 const OVERLOAD_DESCRIPTION = {
   what:
-    "Heavy rainfall on 81% impervious surfaces generates 23,400 gal/hr of runoff that funnels directly into the aging combined sewer. The 48\" main — designed for a 10-year storm — reaches 105% capacity within 45 minutes of peak rainfall. Sewage and stormwater back up at manholes and into basements across South Downtown. No GSI is active to intercept or delay peak flow.",
+    "A 1-hour cloudburst drops 2.6 inches of rain — just past the 2.5 in/hr that Atlanta's drains are designed for — onto 81% impervious surfaces. The South Downtown sub-basin sheds ≈2.8 million gallons of runoff straight into the aging combined sewer. The 48\" main — built for a 10-year storm and rated at ~2.7 million gal/hr (≈100 cfs) — hits 105% capacity, so ~130,000 gallons back up at manholes and into basements across South Downtown. No GSI is active to intercept or delay peak flow.",
   drivers: [
     { label: "Impervious Surface", value: "81%", status: "high" as const },
-    { label: "Rainfall Event", value: "2.4 in/hr", status: "high" as const },
+    { label: "Rainfall Event", value: "2.6 in/hr", status: "high" as const },
     { label: "Infrastructure Age", value: "95–130 yrs", status: "medium" as const },
     { label: "Elevation Risk", value: "Moderate", status: "medium" as const },
     { label: "GSI Coverage", value: "2%", status: "high" as const },
@@ -341,9 +340,9 @@ export function AnalyticsPanel({ mode, timelineValue, selectedSolution }: Analyt
     ? Math.round(Math.min(progress * 105, 105))
     : Math.round(Math.min(progress * sol.pipeMax, sol.pipeMax));
   const flow = isOverload
-    ? Math.round(Math.min(progress * 23400, 23400))
+    ? Math.round(Math.min(progress * 2820000, 2820000))
     : Math.round(Math.min(progress * sol.flowMax, sol.flowMax));
-  const overflow = isOverload ? Math.round(Math.max(0, (progress - 0.65) * 14286)) : 0;
+  const overflow = isOverload ? Math.round(Math.max(0, (progress - 0.65) * 371429)) : 0;
   const flood = isOverload
     ? Math.round(progress * 88)
     : Math.round(progress * sol.floodMax);
@@ -457,14 +456,14 @@ export function AnalyticsPanel({ mode, timelineValue, selectedSolution }: Analyt
         <MetricBar
           label="CURRENT FLOW"
           value={flow}
-          max={25000}
+          max={3000000}
           color="#00a8f3"
           unit=" gal/hr"
         />
         <MetricBar
           label="OVERFLOW"
           value={overflow}
-          max={5000}
+          max={150000}
           color={overflow > 0 ? "#ef4444" : "#00d4d8"}
           unit=" gal"
         />
@@ -564,7 +563,7 @@ export function AnalyticsPanel({ mode, timelineValue, selectedSolution }: Analyt
               Reduce peak flow with GSI
             </div>
             <div style={{ fontSize: 10, color: "#5b8ab0", lineHeight: 1.5, marginBottom: 10 }}>
-              Green infrastructure can cut peak stormwater flow by 40–70% in this zone.
+              Layered green infrastructure can cut peak stormwater flow by 35–55% in this land-constrained zone — permeable pavement and smart storage do most of the work.
             </div>
           </div>
         </div>

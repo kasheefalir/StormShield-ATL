@@ -1,5 +1,71 @@
 import { useState } from "react";
 import { Check, Zap, DollarSign, Ruler, TrendingDown } from "lucide-react";
+import { ARCHETYPE_META } from "../data/zoneStrategy";
+import { SOLUTION_CAPACITY, spaceForGallons } from "../data/treatmentTrain";
+
+const MONO = "JetBrains Mono, monospace";
+
+// Short "lead with" guidance per archetype — keeps the Solutions surface aligned
+// with the land/soil strategy shown in Flood Zones and Overview.
+const ARCHETYPE_GUIDANCE: Record<string, { zones: string; lead: string }> = {
+  "dense-core": {
+    zones: "South Downtown, Midtown",
+    lead: "Lead with Smart Storage tanks. No land or soil for green GSI — it is a marginal bonus.",
+  },
+  "mixed-urban": {
+    zones: "Westside, Old Fourth Ward, Vine City",
+    lead: "Smart-tank backbone + bioswales / rain gardens as meaningful support.",
+  },
+  "land-available": {
+    zones: "East Atlanta, Airport / College Park",
+    lead: "Tanks + retention basins. Wide-area green GSI only where soil infiltrates well.",
+  },
+};
+
+function StrategyByZoneType() {
+  return (
+    <div
+      style={{
+        marginBottom: 24,
+        padding: "14px 16px",
+        background: "rgba(4,14,30,0.6)",
+        border: "1px solid rgba(0,212,216,0.1)",
+        borderRadius: 8,
+      }}
+    >
+      <div style={{ fontSize: 10, color: "#3a6080", letterSpacing: "0.12em", fontFamily: MONO, marginBottom: 4 }}>
+        CHOOSE BY ZONE TYPE
+      </div>
+      <div style={{ fontSize: 11.5, color: "#6f96b4", marginBottom: 12 }}>
+        The right mix is driven by how much land a zone has and how well its soil infiltrates.
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+        {(Object.keys(ARCHETYPE_META) as Array<keyof typeof ARCHETYPE_META>).map((key) => {
+          const meta = ARCHETYPE_META[key];
+          const g = ARCHETYPE_GUIDANCE[key];
+          return (
+            <div
+              key={key}
+              style={{
+                padding: "11px 13px",
+                borderRadius: 7,
+                background: `${meta.accent}0e`,
+                border: `1px solid ${meta.accent}33`,
+              }}
+            >
+              <div style={{ fontSize: 10, fontFamily: MONO, fontWeight: 700, letterSpacing: "0.05em", color: meta.accent }}>
+                {meta.label}
+              </div>
+              <div style={{ fontSize: 10.5, color: "#7aa0bc", margin: "2px 0 7px", fontStyle: "italic" }}>{meta.tagline}</div>
+              <div style={{ fontSize: 11.5, color: "#aecbe2", lineHeight: 1.45 }}>{g.lead}</div>
+              <div style={{ fontSize: 10, color: "#4a7090", marginTop: 7, fontFamily: MONO }}>{g.zones}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 // Sorted by suitability desc, grouped: Nature-Based first, Engineered second
 const solutionGroups = [
@@ -160,7 +226,7 @@ export function SolutionsWorkspace({ onBack, onSelectSolution, selectedSolution 
           </div>
           <h2 style={{ color: "#e2f0ff", margin: 0 }}>Green Stormwater Infrastructure</h2>
           <div style={{ fontSize: 12, color: "#5b8ab0", marginTop: 4 }}>
-            South Downtown · Selecting solutions to reduce peak flow by 40–70%
+            Match the solution mix to each zone's land and soil — not one size fits all
           </div>
         </div>
         <button
@@ -186,6 +252,7 @@ export function SolutionsWorkspace({ onBack, onSelectSolution, selectedSolution 
       <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
         {/* Solutions — two grouped rows of 3 */}
         <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px 24px" }}>
+          <StrategyByZoneType />
           {solutionGroups.map((group) => (
             <div key={group.label} style={{ marginBottom: 28 }}>
               {/* Group header */}
@@ -288,6 +355,22 @@ export function SolutionsWorkspace({ onBack, onSelectSolution, selectedSolution 
                         </div>
                       </div>
 
+                      {/* Storage capacity / space needed (shared with the treatment train) */}
+                      {SOLUTION_CAPACITY[sol.id] && (
+                        <div style={{ marginBottom: 10, padding: "8px 10px", background: "rgba(0,200,120,0.05)", border: "1px solid rgba(0,200,120,0.16)", borderRadius: 6 }}>
+                          <div style={{ fontSize: 8, color: "#2d5070", marginBottom: 4, fontFamily: MONO, letterSpacing: "0.06em" }}>
+                            STORAGE CAPACITY
+                          </div>
+                          <div style={{ fontSize: 10, color: "#7fb89a", marginBottom: 3 }}>
+                            Absorbs {SOLUTION_CAPACITY[sol.id].absorbs}
+                          </div>
+                          <div style={{ fontSize: 9.5, color: "#4e7a96" }}>
+                            Space to hold 10% of a storm (~282k gal):{" "}
+                            <b style={{ color: "#9fd9b8" }}>{spaceForGallons(sol.id, 282000)}</b>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Tags */}
                       <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
                         {sol.tags.map((tag) => (
@@ -383,7 +466,7 @@ export function SolutionsWorkspace({ onBack, onSelectSolution, selectedSolution 
               </div>
               <p style={{ fontSize: 11, color: "#5b8ab0", lineHeight: 1.55, margin: 0 }}>
                 {selected.id === "smart-storage-network"
-                  ? <>Real-time IoT control diverts <span style={{ color: "#00d4d8" }}>76% of peak storm runoff</span> to underground storage. Pipe utilization drops from <span style={{ color: "#ef4444" }}>130%</span> to <span style={{ color: "#00d4d8" }}>~57%</span> — overflow eliminated. <span style={{ color: "#00d4d8" }}>3,850 gal/min</span> stored and released after the storm passes. Based on EPA RTC pilot data (EmNet, Milwaukee, KC).</>
+                  ? <>A distributed network of ~6 smart tanks (~510k gal) captures the peak overshoot — <span style={{ color: "#00d4d8" }}>~14% of storm runoff</span> — at the source and diverts it <span style={{ color: "#00d4d8" }}>out of the combined sewer to reuse / recharge</span>. Pipe utilization drops from <span style={{ color: "#ef4444" }}>105%</span> to an honest <span style={{ color: "#00d4d8" }}>~90%</span> — overflow eliminated. <span style={{ color: "#00d4d8" }}>~6,500 gal/min</span> diverted, slow-released after the storm. Based on EPA RTC pilot data (EmNet, Milwaukee, KC).</>
                   : selected.id === "retention-basin"
                   ? <>Up to <span style={{ color: "#00d4d8" }}>6,400 gal/min</span> diverted from the combined sewer into an open detention pond, cutting peak sewer load by <span style={{ color: "#00d4d8" }}>76%</span>. Basin drains over 12–24 hrs via a controlled outlet. Based on EPA wet detention basin design guidance and Georgia Stormwater Manual.</>
                   : <>Implementing {selected.name} in South Downtown would reduce peak stormwater discharge to the combined sewer by{" "}<span style={{ color: "#00d4d8" }}>{selected.peakFlowReduction}%</span>, keeping the system below capacity during most storm events.</>

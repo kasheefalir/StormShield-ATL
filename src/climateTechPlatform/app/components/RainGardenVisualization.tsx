@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { drawSmartTankFeeder } from "./feederPipe";
 
 function rrPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
   const rad = Math.min(r, w / 2, h / 2);
@@ -18,12 +19,14 @@ interface Props {
   isPlaying: boolean;
   speed: number;
   timelineValue: number;
+  source?: "storm-drain" | "smart-tank";
 }
 
 type Raindrop = { x: number; y: number; spd: number; len: number; op: number };
 type Particle = { x: number; y: number; vx: number; vy: number; life: number; maxLife: number };
 
-export function RainGardenVisualization({ isPlaying, speed, timelineValue }: Props) {
+export function RainGardenVisualization({ isPlaying, speed, timelineValue, source = "storm-drain" }: Props) {
+  const fromTank = source === "smart-tank";
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
@@ -60,7 +63,7 @@ export function RainGardenVisualization({ isPlaying, speed, timelineValue }: Pro
     }
     rafRef.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [isPlaying, speed, timelineValue]);
+  }, [isPlaying, speed, timelineValue, source]);
 
   function draw(ctx: CanvasRenderingContext2D, W: number, H: number, t: number, prog: number) {
     ctx.clearRect(0, 0, W, H);
@@ -157,6 +160,8 @@ export function RainGardenVisualization({ isPlaying, speed, timelineValue }: Pro
     ctx.stroke();
     ctx.setLineDash([]);
 
+    // Storm drain + reduced-flow trickle — only when fed from the storm drain.
+    if (!fromTank) {
     // Storm drain (mostly quiet)
     const drainX = W * 0.50;
     ctx.fillStyle = "#1a2535";
@@ -192,9 +197,20 @@ export function RainGardenVisualization({ isPlaying, speed, timelineValue }: Pro
     ctx.textAlign = "center";
     ctx.fillText("↓  65% PEAK FLOW REDUCTION TO STORM DRAIN  ↓", W / 2, sidBot + 13);
     ctx.textAlign = "left";
+    } // end storm-drain block
 
     // ── Underground ──────────────────────────────────────────────────────
     drawUnderground(ctx, W, strBot, H, prog, t);
+
+    // Underground feeder: excess from the smart tank rises into the garden cell.
+    if (fromTank) {
+      drawSmartTankFeeder(
+        ctx,
+        [{ x: 2, y: strBot + 16 }, { x: W * 0.5, y: strBot + 16 }, { x: W * 0.5, y: yardBot - 2 }],
+        t, Math.min(prog / 0.85, 1),
+        { label: "⟶ EXCESS FROM SMART TANK", color: "0,200,140" },
+      );
+    }
 
     // ── Top-right overlay ────────────────────────────────────────────────
     drawOverlay(ctx, W, t, prog);
@@ -578,6 +594,8 @@ export function RainGardenVisualization({ isPlaying, speed, timelineValue }: Pro
     ctx.fillText("← SOIL RECHARGE: WATER INFILTRATING INTO GROUNDWATER →", W / 2, ugTop + 10);
     ctx.textAlign = "left";
 
+    // Storm-drain inlet shaft + sewer pipe — only when fed from the storm drain.
+    if (!fromTank) {
     // Inlet shaft
     const shaftX = W * 0.50;
     const pipeY = ugTop + Math.min(H - ugTop - 45, 38);
@@ -648,6 +666,7 @@ export function RainGardenVisualization({ isPlaying, speed, timelineValue }: Pro
     const capPct = Math.round(wPct * 100);
     ctx.fillStyle = "rgba(0,210,120,0.78)"; ctx.font = "bold 9px JetBrains Mono, monospace";
     ctx.fillText(`SEWER PIPE — ${capPct}% CAPACITY   ✓ NORMAL  (vs 105% without rain gardens)`, W * 0.06, pipeY + pH + 14);
+    } // end sewer/inlet block
   }
 
   // ─── OVERLAY PANEL ─────────────────────────────────────────────────────

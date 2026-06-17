@@ -1,7 +1,7 @@
 import { CloudRain, ArrowRight, Droplets, Waves, BarChart2, AlertTriangle } from "lucide-react";
 
 const steps = [
-  { id: 1, label: "Rainfall", sublabel: "2.4 in/hr", icon: CloudRain, color: "#00a8f3" },
+  { id: 1, label: "Rainfall", sublabel: "2.6 in/hr", icon: CloudRain, color: "#00a8f3" },
   { id: 2, label: "Runoff", sublabel: "81% impervious", icon: Waves, color: "#00d4d8" },
   { id: 3, label: "Inlet", sublabel: "Storm drain", icon: Droplets, color: "#3b82f6" },
   { id: 4, label: "Sewer Flow", sublabel: "Combined system", icon: ArrowRight, color: "#6366f1" },

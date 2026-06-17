@@ -1,9 +1,13 @@
 import { useEffect, useRef } from "react";
+import { drawSmartTankFeeder } from "./feederPipe";
 
 interface Props {
   isPlaying: boolean;
   speed: number;
   timelineValue: number;
+  // "smart-tank" hides the storm drain / sewer apparatus — the basin is fed by the
+  // smart tank's excess water instead (used inside the treatment-train slideshow).
+  source?: "storm-drain" | "smart-tank";
 }
 
 type Drop     = { x: number; y: number; spd: number; len: number; op: number };
@@ -23,7 +27,8 @@ function rrPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, 
   ctx.closePath();
 }
 
-export function RetentionBasinVisualization({ isPlaying, speed, timelineValue }: Props) {
+export function RetentionBasinVisualization({ isPlaying, speed, timelineValue, source = "storm-drain" }: Props) {
+  const fromTank = source === "smart-tank";
   const cvRef   = useRef<HTMLCanvasElement>(null);
   const elRef   = useRef<HTMLDivElement>(null);
   const rafRef  = useRef(0);
@@ -56,7 +61,7 @@ export function RetentionBasinVisualization({ isPlaying, speed, timelineValue }:
     };
     rafRef.current = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [isPlaying, speed, timelineValue]);
+  }, [isPlaying, speed, timelineValue, source]);
 
   // ─────────────────────────────────────────────────────────────────────────
   function render(ctx: CanvasRenderingContext2D, W: number, H: number, t: number, prog: number) {
@@ -152,14 +157,30 @@ export function RetentionBasinVisualization({ isPlaying, speed, timelineValue }:
     drawBasinLandscape(ctx, basinX, basinRX, basinBW, berm, basinTopY, basinFloorY, basinDepth, t);
     drawBasinWater(ctx, basinX, basinRX, berm, basinTopY, basinFloorY, waterSurfaceY, waterH, fillFrac, inletX, inletY, valveAmt, t);
     drawBasinVegetation(ctx, basinX, basinRX, berm, basinTopY, t, fillFrac);
-    drawDrainShaft(ctx, drainX, ugTop, sceneBot, swkH, sensorY, valveY, sewPipeY, sewUtil, stressed, valveAmt, t, prog);
-    drawSensorNode(ctx, drainX, sensorY, stressed, valveAmt, prog, t);
-    drawValveJunction(ctx, drainX, valveY, stressed, valveAmt, t);
-    drawDiversionPipe(ctx, divPipeX1, divPipeX2, divPipeY, inletX, inletY, valveAmt, t);
+    // Storm-drain / valve / diversion / sewer apparatus — only when fed from the
+    // storm drain. In smart-tank mode the basin is fed by the inflow pipe overlay.
+    if (!fromTank) {
+      drawDrainShaft(ctx, drainX, ugTop, sceneBot, swkH, sensorY, valveY, sewPipeY, sewUtil, stressed, valveAmt, t, prog);
+      drawSensorNode(ctx, drainX, sensorY, stressed, valveAmt, prog, t);
+      drawValveJunction(ctx, drainX, valveY, stressed, valveAmt, t);
+      drawDiversionPipe(ctx, divPipeX1, divPipeX2, divPipeY, inletX, inletY, valveAmt, t);
+    }
     drawOutletStructure(ctx, outletX, outletY, basinFloorY, sewPipeY, releaseAmt, fillFrac, t);
-    drawSewerPipe(ctx, sewPipeL, sewPipeR, sewPipeY, sewPipeH, sewUtil, stressed, valveAmt, t, prog);
-    drawParticles(ctx, partRef, drainX, ugTop, sensorY, valveY, divPipeX1, divPipeX2, divPipeY, inletX, inletY, basinFloorY, outletX, sewPipeY, sewPipeH, valveAmt, releaseAmt, fillFrac, stressed, t);
-    drawLabels(ctx, W, H, roadTop, basinX, basinRX, berm, basinTopY, basinFloorY, waterSurfaceY, fillFrac, inletX, inletY, drainX, sensorY, valveY, divPipeY, sewPipeY, sewPipeH, valveAmt, releasing, releaseAmt, stressed, storagePct, divertedGPM, floodRedPct, overflowAvoided, step, prog, t);
+    // Underground feeder: excess from the smart tank runs in from the left and up
+    // into the basin's inlet, filling it until the basin reaches capacity.
+    if (fromTank) {
+      drawSmartTankFeeder(
+        ctx,
+        [{ x: 2, y: valveY }, { x: basinX - 16, y: valveY }, { x: inletX, y: inletY }],
+        t, fillFrac / 0.88,
+        { label: "⟶ EXCESS FROM SMART TANK" },
+      );
+    }
+    if (!fromTank) {
+      drawSewerPipe(ctx, sewPipeL, sewPipeR, sewPipeY, sewPipeH, sewUtil, stressed, valveAmt, t, prog);
+      drawParticles(ctx, partRef, drainX, ugTop, sensorY, valveY, divPipeX1, divPipeX2, divPipeY, inletX, inletY, basinFloorY, outletX, sewPipeY, sewPipeH, valveAmt, releaseAmt, fillFrac, stressed, t);
+      drawLabels(ctx, W, H, roadTop, basinX, basinRX, berm, basinTopY, basinFloorY, waterSurfaceY, fillFrac, inletX, inletY, drainX, sensorY, valveY, divPipeY, sewPipeY, sewPipeH, valveAmt, releasing, releaseAmt, stressed, storagePct, divertedGPM, floodRedPct, overflowAvoided, step, prog, t);
+    }
   }
 
   // ── SKY ───────────────────────────────────────────────────────────────────
@@ -223,6 +244,8 @@ export function RetentionBasinVisualization({ isPlaying, speed, timelineValue }:
     ctx.setLineDash([]);
     ctx.fillStyle="#1a2535"; ctx.fillRect(0, sceneBot, neighW, swkH);
 
+    // Surface runoff + storm drain — only when fed from the storm drain.
+    if (!fromTank) {
     // Surface runoff dashes converging on drain
     if (prog>0.06) {
       const rA=Math.min((prog-0.06)/0.12,1)*0.55;
@@ -262,6 +285,7 @@ export function RetentionBasinVisualization({ isPlaying, speed, timelineValue }:
     ctx.fillStyle=dc+"0.95)"; ctx.font="bold 7px JetBrains Mono, monospace"; ctx.textAlign="center";
     ctx.fillText(isDiv ? "↗ DIVERTED" : "⚠ STORM DRAIN", drainX, sceneBot-13);
     ctx.restore();
+    } // end storm-drain block
 
     // Cars
     const carY=roadTop+5;

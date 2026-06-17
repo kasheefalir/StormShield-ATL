@@ -15,15 +15,15 @@
   {
     "id": "extreme-storm",
     "label": "Extreme Storm",
-    "rainfallInchesPerHour": 2.4,
-    "totalRainfallInches": 4.8,
-    "durationHours": 2,
+    "rainfallInchesPerHour": 2.6,
+    "totalRainfallInches": 2.6,
+    "durationHours": 1,
     "recentRainfallInches": 2.7,
     "averageTemperature": 84,
     "soilMoisturePercent": 72,
     "daysSinceLastRain": 1,
     "routingPreference": "flood-prevention",
-    "description": "A short, intense storm that overloads paved areas, drains, and low-lying corridors."
+    "description": "A 1-hour cloudburst at 2.6 in/hr — just past Atlanta's 2.5 in/hr drain design — that overloads paved areas, drains, and low-lying corridors."
   },
   {
     "id": "drought-mode",
