@@ -19,19 +19,40 @@ import {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const RETENTION_GAL    = 4_800_000;
-const SMART_STORAGE_GAL = 2_100_000;
-const TOTAL_GAL        = RETENTION_GAL + SMART_STORAGE_GAL; // 6 900 000
+// From Rational Method model: 5 zones × 607,500 gal/hr intercepted at peak (10,125 gpm × 60 min)
+// Smart storage hubs (3 dispersal zones — Westside, South Downtown, Vine City): 3 × 607,500
+// Retention basin destinations (2 zones — Old Fourth Ward 55%, Airport South 65% of 607,500)
+const SMART_STORAGE_GAL = 1_822_500;   // 3 dispersal zones × 607,500 gal/hr
+const RETENTION_GAL     =   729_000;   // O4W (334,125) + Airport South (394,875)
+const TOTAL_GAL         = SMART_STORAGE_GAL + RETENTION_GAL; // 2,551,500
 const MONO             = "JetBrains Mono, monospace";
 
 // ─── Tidbits (static, outside component to avoid re-creation) ─────────────────
 
+// Park tidbit #1 is dynamic — call with current acres to get the right text
+function parkSizeTidbit(acres: number) {
+  const piedmont = 185;
+  const ratio = acres / piedmont;
+  const comparison =
+    acres === 0
+      ? "no acreage yet"
+      : acres >= piedmont
+      ? `${(ratio).toFixed(1)}× the size of Piedmont Park`
+      : `about ${Math.round(ratio * 100)}% of Piedmont Park (${piedmont} acres)`;
+  return {
+    icon: "🌿",
+    text: `Atlanta maintains 3,400+ acres of city parkland. At the current allocation, recaptured stormwater can irrigate ${acres} acres — ${comparison} — without drawing a drop from the Chattahoochee.`,
+    source: "Atlanta Parks & Recreation Dept.",
+  };
+}
+
 const TIDBITS = {
   park: [
+    // slot 0 is replaced dynamically — see SCENARIOS below
     {
       icon: "🌿",
-      text: "Atlanta maintains 3,400+ acres of city parkland. At 33% allocation, recaptured stormwater could cover roughly the footprint of Piedmont Park (185 acres) 0.7× — without drawing a drop from the Chattahoochee.",
-      source: "Atlanta Parks & Recreation Dept.",
+      text: "",
+      source: "",
     },
     {
       icon: "💧",
@@ -408,7 +429,7 @@ export function WaterManagementPage() {
       description: "Redirect stored water to irrigate city parks, street trees, and green corridors. Native and mixed plantings require ~18,200 gal per acre per cycle (0.67 in) — replacing potable water drawn from Atlanta's Chattahoochee supply at $7.00/1,000 gal.",
       gallons: impacts.park.gallons,
       pct: alloc[0],
-      tidbits: TIDBITS.park,
+      tidbits: [parkSizeTidbit(impacts.park.acres), ...TIDBITS.park.slice(1)],
     },
     {
       label: "Drought Reserve",
@@ -456,7 +477,7 @@ export function WaterManagementPage() {
       {/* ── Storage dashboard ─────────────────────────────────────────────────── */}
       <div style={{ padding: "14px 28px", borderBottom: "1px solid rgba(0,212,216,0.06)", flexShrink: 0 }}>
         <div style={{ fontSize: 10, color: "#3a6080", letterSpacing: "0.12em", fontFamily: MONO, marginBottom: 10 }}>
-          AVAILABLE STORAGE CAPACITY
+          CAPTURED PER STORM HOUR — 5-ZONE DEPLOYMENT (10,125 GPM × 60 MIN)
         </div>
         <div style={{ display: "flex", gap: 12 }}>
           <StorageGauge label="Retention Basin" sublabel="Surface + subsurface detention" gallons={RETENTION_GAL} totalGallons={TOTAL_GAL} color="#3b82f6" icon={<Waves size={15} />} mounted={mounted} />
@@ -468,8 +489,8 @@ export function WaterManagementPage() {
             display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 4,
           }}>
             <div style={{ fontSize: 10, color: "#3a6080", letterSpacing: "0.1em", fontFamily: MONO }}>TOTAL AVAILABLE</div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: "#00d4d8", fontFamily: MONO }}>6.9M</div>
-            <div style={{ fontSize: 11, color: "#4a7090" }}>gallons ready</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: "#00d4d8", fontFamily: MONO }}>2.55M</div>
+            <div style={{ fontSize: 11, color: "#4a7090" }}>gallons / hr captured</div>
           </div>
         </div>
       </div>
@@ -696,7 +717,7 @@ export function WaterManagementPage() {
           <div style={{ display: "flex", gap: 8, padding: "10px 12px", background: "rgba(0,212,216,0.04)", border: "1px solid rgba(0,212,216,0.1)", borderRadius: 8 }}>
             <Info size={13} color="#3a6080" style={{ flexShrink: 0, marginTop: 1 }} />
             <p style={{ margin: 0, fontSize: 10, color: "#3a6080", lineHeight: 1.6 }}>
-              Numbers are based on a 1-hour, 2.6 in/hr storm across Atlanta's five high-risk zones, Atlanta's 2024 water rates, Georgia EPD flow standards, and USGS stream gauge data. Move the sliders to see how different choices change every figure in real time.
+              Numbers are based on a 1-hour, 3.0 in/hr storm across Atlanta's five high-risk zones (Rational Method: C=0.90, A=50 acres → 10,125 gpm excess), Atlanta's 2024 water rates, Georgia EPD flow standards, and USGS stream gauge data. Move the sliders to see how different choices change every figure in real time.
             </p>
           </div>
         </div>

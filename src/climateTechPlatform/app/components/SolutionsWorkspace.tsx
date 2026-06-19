@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Check, Zap, DollarSign, Ruler, TrendingDown } from "lucide-react";
+import { Check, DollarSign, Ruler, TrendingDown } from "lucide-react";
 import { ARCHETYPE_META } from "../data/zoneStrategy";
-import { SOLUTION_CAPACITY, spaceForGallons } from "../data/treatmentTrain";
 
 const MONO = "JetBrains Mono, monospace";
 
@@ -78,12 +77,14 @@ const solutionGroups = [
         id: "bioswale",
         name: "Bioswale",
         emoji: "🌿",
-        description: "Vegetated channel that filters and slows stormwater runoff along streets and parking lots.",
+        description: "Vegetated channel that filters and slows stormwater along streets and parking lots. Ponding in 12\" of engineered soil captures runoff before it reaches the sewer inlet.",
         suitability: 92,
-        runoffReduction: 70,
-        peakFlowReduction: 52,
         estimatedCost: "$12–55K",
         areaRequired: "500–2,000 sq ft",
+        storageVolume: "~280,000 gal",
+        storageNote: "1.1 mi × 6 ft swale · 8 gal/ft²",
+        drawdownTime: "4–12 hrs",
+        coBenefit: "Pollutant filtration, streetside habitat corridor",
         difficulty: "Low",
         difficultyColor: "#00d4d8",
         tags: ["Street-scale", "Linear sites", "High performance"],
@@ -92,12 +93,14 @@ const solutionGroups = [
         id: "rain-garden",
         name: "Rain Garden",
         emoji: "🌸",
-        description: "Shallow planted depression that captures runoff from roofs, driveways, and streets.",
+        description: "Shallow planted depression captures rooftop and driveway runoff at the source. Amended soil with 9\" ponding depth infiltrates during and after the storm.",
         suitability: 87,
-        runoffReduction: 83,
-        peakFlowReduction: 65,
         estimatedCost: "$3–20K",
         areaRequired: "100–500 sq ft",
+        storageVolume: "~122,000 gal",
+        storageNote: "~0.5 acre of cells · 5.6 gal/ft²",
+        drawdownTime: "12–36 hrs",
+        coBenefit: "Native plant habitat, urban cooling, reduced heat island",
         difficulty: "Low",
         difficultyColor: "#00d4d8",
         tags: ["Residential", "Low cost", "Quick install"],
@@ -106,12 +109,14 @@ const solutionGroups = [
         id: "tree-trench",
         name: "Tree Trench",
         emoji: "🌳",
-        description: "Underground silva cells connected to street trees absorb and store stormwater below the surface.",
+        description: "Continuous Silva Cell root vaults beneath the sidewalk store stormwater and slow-release it to tree roots — no surface footprint, no land consumed.",
         suitability: 85,
-        runoffReduction: 42,
-        peakFlowReduction: 35,
         estimatedCost: "$65–200K",
-        areaRequired: "Sidewalk zone",
+        areaRequired: "Sidewalk ROW",
+        storageVolume: "~85,500 gal",
+        storageNote: "~0.6 mi trench · 27 gal/linear ft",
+        drawdownTime: "24–48 hrs",
+        coBenefit: "Doubles canopy cover (~528 trees), -4°F urban cooling",
         difficulty: "Medium",
         difficultyColor: "#f59e0b",
         tags: ["Urban streets", "Co-benefits", "Long-lived"],
@@ -127,12 +132,14 @@ const solutionGroups = [
         id: "smart-storage-network",
         name: "Smart Storage Network",
         emoji: "🔧",
-        description: "IoT sensor detects sewer overload, triggers a smart valve to divert excess peak stormwater into an underground storage tank — storing it until capacity returns.",
+        description: "IoT pressure sensors trigger a smart valve to divert excess peak flow (10,125 gpm) into distributed underground tanks — capturing it at the source before it backs up into the sewer.",
         suitability: 94,
-        runoffReduction: 76,
-        peakFlowReduction: 74,
         estimatedCost: "$290–780K",
         areaRequired: "Subsurface",
+        storageVolume: "607,500 gal/hr",
+        storageNote: "6 tanks ~100k gal each · 10,125 gpm intercepted",
+        drawdownTime: "12–24 hrs (controlled release)",
+        coBenefit: "Real-time IoT control, reuse-ready for irrigation or non-potable",
         difficulty: "Medium",
         difficultyColor: "#f59e0b",
         tags: ["Smart city", "Real-time control", "High capacity", "Delayed release", "Urban retrofit"],
@@ -141,12 +148,14 @@ const solutionGroups = [
         id: "permeable-pavement",
         name: "Permeable Pavement",
         emoji: "🧱",
-        description: "Porous surface allows water to pass through into subbase storage, reducing surface runoff and peak discharge.",
+        description: "Porous asphalt or concrete over a 12\" open-graded stone reservoir (40% void) holds water below the surface and meters it through an under-drain after the storm.",
         suitability: 79,
-        runoffReduction: 83,
-        peakFlowReduction: 72,
         estimatedCost: "$130–270K",
-        areaRequired: "Full lot",
+        areaRequired: "Full lot / plaza",
+        storageVolume: "~914,000 gal",
+        storageNote: "~7 acres · 3.0 gal/ft² (12\" stone, 40% void)",
+        drawdownTime: "6–24 hrs",
+        coBenefit: "Reduces surface ponding, safer driving in rain, heat island benefit",
         difficulty: "Medium",
         difficultyColor: "#f59e0b",
         tags: ["Parking lots", "Driveways", "High capacity"],
@@ -155,12 +164,14 @@ const solutionGroups = [
         id: "retention-basin",
         name: "Retention Basin",
         emoji: "💧",
-        description: "Permanent open water feature that captures large volumes of stormwater at peak and releases slowly via a controlled outlet valve over 12–24 hours.",
+        description: "Deep surface or subsurface detention holds large volumes at peak and slow-releases via a gated riser over 24–72 hours — permanently removing water from the combined sewer.",
         suitability: 74,
-        runoffReduction: 65,
-        peakFlowReduction: 76,
         estimatedCost: "$320K–1.6M",
         areaRequired: "0.5–5 acres",
+        storageVolume: "~608,000 gal",
+        storageNote: "~0.2 acre subsurface vault · 30 gal/ft²",
+        drawdownTime: "24–72 hrs",
+        coBenefit: "Habitat creation, groundwater recharge, baseflow augmentation",
         difficulty: "High",
         difficultyColor: "#ef4444",
         tags: ["District-scale", "High volume", "Major investment"],
@@ -176,23 +187,6 @@ interface SolutionsWorkspaceProps {
   onBack: () => void;
   onSelectSolution: (id: string) => void;
   selectedSolution: string | null;
-}
-
-function ScoreBar({ value, color }: { value: number; color: string }) {
-  return (
-    <div style={{ height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
-      <div
-        style={{
-          height: "100%",
-          width: `${value}%`,
-          background: color,
-          borderRadius: 2,
-          boxShadow: `0 0 6px ${color}60`,
-          transition: "width 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-      />
-    </div>
-  );
 }
 
 export function SolutionsWorkspace({ onBack, onSelectSolution, selectedSolution }: SolutionsWorkspaceProps) {
@@ -321,23 +315,30 @@ export function SolutionsWorkspace({ onBack, onSelectSolution, selectedSolution 
                         {sol.description}
                       </p>
 
-                      {/* Metrics */}
-                      <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: 12 }}>
-                        <div>
-                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                            <span style={{ fontSize: 9, color: "#2d5070", fontFamily: "JetBrains Mono, monospace" }}>RUNOFF REDUCTION</span>
-                            <span style={{ fontSize: 9, color: "#00d4d8", fontFamily: "JetBrains Mono, monospace" }}>{sol.runoffReduction}%</span>
+                      {/* Storage volume — primary metric */}
+                      {"storageVolume" in sol && (
+                        <div style={{ marginBottom: 12, padding: "9px 11px", background: `${group.accent}0c`, border: `1px solid ${group.accent}28`, borderRadius: 7 }}>
+                          <div style={{ fontSize: 8, color: "#2d5070", letterSpacing: "0.1em", fontFamily: MONO, marginBottom: 4 }}>STORAGE CAPACITY</div>
+                          <div style={{ fontSize: 15, fontWeight: 700, color: group.accent, fontFamily: MONO, lineHeight: 1.1 }}>
+                            {(sol as any).storageVolume}
                           </div>
-                          <ScoreBar value={sol.runoffReduction} color="#00d4d8" />
+                          <div style={{ fontSize: 9.5, color: "#4a7090", marginTop: 3 }}>{(sol as any).storageNote}</div>
                         </div>
-                        <div>
-                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                            <span style={{ fontSize: 9, color: "#2d5070", fontFamily: "JetBrains Mono, monospace" }}>PEAK FLOW REDUCTION</span>
-                            <span style={{ fontSize: 9, color: "#00a8f3", fontFamily: "JetBrains Mono, monospace" }}>{sol.peakFlowReduction}%</span>
+                      )}
+
+                      {/* Drawdown + Co-benefit */}
+                      {"drawdownTime" in sol && (
+                        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+                          <div style={{ flex: 1, padding: "7px 9px", background: "rgba(0,212,216,0.04)", border: "1px solid rgba(0,212,216,0.1)", borderRadius: 6 }}>
+                            <div style={{ fontSize: 8, color: "#254860", letterSpacing: "0.08em", fontFamily: MONO, marginBottom: 3 }}>DRAWDOWN</div>
+                            <div style={{ fontSize: 10.5, color: "#6fb8d4", fontWeight: 500 }}>{(sol as any).drawdownTime}</div>
                           </div>
-                          <ScoreBar value={sol.peakFlowReduction} color="#00a8f3" />
+                          <div style={{ flex: 2, padding: "7px 9px", background: "rgba(0,168,243,0.04)", border: "1px solid rgba(0,168,243,0.1)", borderRadius: 6 }}>
+                            <div style={{ fontSize: 8, color: "#254860", letterSpacing: "0.08em", fontFamily: MONO, marginBottom: 3 }}>CO-BENEFIT</div>
+                            <div style={{ fontSize: 10, color: "#5a9abc", lineHeight: 1.4 }}>{(sol as any).coBenefit}</div>
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* Cost + Area */}
                       <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
@@ -354,22 +355,6 @@ export function SolutionsWorkspace({ onBack, onSelectSolution, selectedSolution 
                           <div style={{ fontSize: 10, color: "#6a9ab8" }}>{sol.areaRequired}</div>
                         </div>
                       </div>
-
-                      {/* Storage capacity / space needed (shared with the treatment train) */}
-                      {SOLUTION_CAPACITY[sol.id] && (
-                        <div style={{ marginBottom: 10, padding: "8px 10px", background: "rgba(0,200,120,0.05)", border: "1px solid rgba(0,200,120,0.16)", borderRadius: 6 }}>
-                          <div style={{ fontSize: 8, color: "#2d5070", marginBottom: 4, fontFamily: MONO, letterSpacing: "0.06em" }}>
-                            STORAGE CAPACITY
-                          </div>
-                          <div style={{ fontSize: 10, color: "#7fb89a", marginBottom: 3 }}>
-                            Absorbs {SOLUTION_CAPACITY[sol.id].absorbs}
-                          </div>
-                          <div style={{ fontSize: 9.5, color: "#4e7a96" }}>
-                            Space to hold 10% of a storm (~282k gal):{" "}
-                            <b style={{ color: "#9fd9b8" }}>{spaceForGallons(sol.id, 282000)}</b>
-                          </div>
-                        </div>
-                      )}
 
                       {/* Tags */}
                       <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
@@ -403,6 +388,26 @@ export function SolutionsWorkspace({ onBack, onSelectSolution, selectedSolution 
               </div>
             </div>
           ))}
+
+          {/* ── Methodology footnote ─────────────────────────────────── */}
+          <div
+            style={{
+              marginTop: 4,
+              padding: "9px 14px",
+              background: "rgba(0,168,243,0.04)",
+              border: "1px solid rgba(0,168,243,0.1)",
+              borderRadius: 6,
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 8,
+            }}
+          >
+            <span style={{ fontSize: 11, color: "#1e4a6a", flexShrink: 0, marginTop: 1 }}>ⓘ</span>
+            <p style={{ margin: 0, fontSize: 10.5, color: "#2d5c7a", lineHeight: 1.55, fontFamily: MONO }}>
+              <span style={{ color: "#3a7090", fontWeight: 600 }}>Rational Method model (50-acre catchment, C=0.90):</span>{" "}
+              Storm: 3.0 in/hr → 60,750 gpm total runoff · Drain capacity: 2.5 in/hr → 50,625 gpm · Excess diverted by GSI: <b style={{ color: "#3a7090" }}>10,125 gpm (~608k gal/hr)</b>.
+            </p>
+          </div>
         </div>
 
         {/* Selected solution detail panel */}
@@ -437,8 +442,8 @@ export function SolutionsWorkspace({ onBack, onSelectSolution, selectedSolution 
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {[
                   { label: "Suitability Score", value: `${selected.suitability}/100`, color: "#00d4d8" },
-                  { label: "Runoff Reduction", value: `${selected.runoffReduction}%`, color: "#00a8f3" },
-                  { label: "Peak Flow Reduction", value: `${selected.peakFlowReduction}%`, color: "#3b82f6" },
+                  ...("storageVolume" in selected ? [{ label: "Storage Capacity", value: (selected as any).storageVolume, color: "#00d4d8" }] : []),
+                  ...("drawdownTime" in selected ? [{ label: "Drawdown Time", value: (selected as any).drawdownTime, color: "#3b82f6" }] : []),
                   { label: "Est. Cost", value: selected.estimatedCost, color: "#f59e0b" },
                   { label: "Area Required", value: selected.areaRequired, color: "#a78bfa" },
                   { label: "Difficulty", value: selected.difficulty, color: selected.difficultyColor },

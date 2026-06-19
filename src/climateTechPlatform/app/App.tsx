@@ -5,13 +5,12 @@ import { AnalyticsPanel } from "./components/AnalyticsPanel";
 import { ProcessTimeline } from "./components/ProcessTimeline";
 import { SolutionsWorkspace } from "./components/SolutionsWorkspace";
 import { Play, Pause, ChevronRight, Gauge, Activity, Zap, AlertCircle } from "lucide-react";
-import { DataSourcesPage } from "./components/DataSourcesPage";
 import { FloodZonesPage } from "./components/FloodZonesPage";
 import { WaterManagementPage } from "./components/WaterManagementPage";
 import { StrategyBadge } from "./components/StrategyPanel";
 
 type SimMode = "current" | "gsi";
-type ActivePage = "overview" | "flood-map" | "flood-zones" | "solutions" | "water-management" | "data-sources";
+type ActivePage = "overview" | "flood-map" | "flood-zones" | "solutions" | "water-management";
 
 // Zone metadata for breadcrumb / header — mirrors FloodZonesPage ZONES array
 const ZONE_META: Record<string, { name: string; imperviousPct: number; complaints: number }> = {
@@ -104,7 +103,6 @@ export default function App({ onNavigateToMap }: AppProps = {}) {
 
 
   const showSolutions      = activePage === "solutions";
-  const showDataSources    = activePage === "data-sources";
   const showFloodZones     = activePage === "flood-zones";
   const showWaterMgmt      = activePage === "water-management";
 
@@ -123,9 +121,7 @@ export default function App({ onNavigateToMap }: AppProps = {}) {
       <Sidebar activePage={activePage} onNavigate={handleNavigate} onNavigateToMap={onNavigateToMap} />
 
       <main style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
-        {showDataSources ? (
-          <DataSourcesPage />
-        ) : showWaterMgmt ? (
+        {showWaterMgmt ? (
           <WaterManagementPage />
         ) : showFloodZones ? (
           <FloodZonesPage
@@ -174,7 +170,7 @@ export default function App({ onNavigateToMap }: AppProps = {}) {
                       <AlertCircle size={11} /> High Flood Risk
                     </Badge>
                     <Badge color="#f59e0b" bg="rgba(245,158,11,0.08)">
-                      <Gauge size={11} /> {ZONE_META[selectedZoneId]?.imperviousPct ?? 81}% Impervious
+                      <Gauge size={11} /> {ZONE_META[selectedZoneId]?.imperviousPct ?? 81}% Hard Surface
                     </Badge>
                     <Badge color="#00a8f3" bg="rgba(0,168,243,0.08)">
                       <Activity size={11} /> {ZONE_META[selectedZoneId]?.complaints ?? 102} Complaints
@@ -277,7 +273,7 @@ export default function App({ onNavigateToMap }: AppProps = {}) {
                   >
                     {[
                       { label: "ZONE AREA", value: "0.82 mi²" },
-                      { label: "RAIN INTENSITY", value: "2.6 in/hr" },
+                      { label: "RAIN INTENSITY", value: "3.0 in/hr" },
                       { label: "SEWER AGE", value: "95–130 yrs" },
                     ].map((s) => (
                       <div

@@ -14,8 +14,10 @@ import {
   Building2,
   Users,
   ChevronRight,
+  ChevronLeft,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
-import { StrategyBadge, StrategyCallout } from "./StrategyPanel";
 import { TreatmentTrain } from "./TreatmentTrain";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -76,7 +78,7 @@ const ZONES: ZoneProfile[] = [
     vulnerablePopulation: 78,
     coordinates: "33.77°N, 84.43°W",
     areaDescription:
-      "Historic neighborhood with dense residential blocks, aging combined sewers, and a direct drainage pathway to Proctor Creek. High impervious cover from streets and small lots generates rapid runoff that backs up into the combined sewer during moderate storms. Limited lot size rules out large-footprint solutions.",
+      "Historic neighborhood with dense residential blocks, aging combined sewers, and a direct drainage pathway to Proctor Creek. High hard surface cover from streets and small lots generates rapid runoff that backs up into the combined sewer during moderate storms. Limited lot size rules out large-footprint solutions.",
     complaintTypes: ["Street flooding", "Blocked drain", "Yard flooding", "Creek overflow"],
     constraintSummary:
       "Small residential lots and historic street layouts limit footprint. Soil infiltration is moderate — enough for plant-based systems but not high-volume infiltration trenches. No large open parcels available for retention structures.",
@@ -145,7 +147,7 @@ const ZONES: ZoneProfile[] = [
     vulnerablePopulation: 72,
     coordinates: "33.75°N, 84.39°W",
     areaDescription:
-      "Tightly packed commercial blocks, viaducts, and parking decks with 81% impervious cover. Nearly every raindrop hits a hard surface and routes immediately to an aging combined sewer. Underground utilities are dense, and available land is extremely scarce (score 22). The sewer network here was built 1890–1930 and regularly surpasses 105% capacity during heavy rain.",
+      "Tightly packed commercial blocks, viaducts, and parking decks with 81% hard surface cover. Nearly every raindrop hits concrete or asphalt and routes immediately to an aging combined sewer. Underground utilities are dense, and available land is extremely scarce (score 22). The sewer network here was built 1890–1930 and regularly hits 100% capacity during moderate storms — any additional flow causes backup.",
     complaintTypes: [
       "Street flooding",
       "Ponding near drains",
@@ -162,7 +164,7 @@ const ZONES: ZoneProfile[] = [
         icon: SOL_ICONS["permeable-pavement"],
         feasibility: "recommended",
         reason:
-          "Parking lots and civic plazas can be resurfaced with permeable pavers or concrete. Stores up to 28,000 gal per 8,400 sq ft — directly intercepts the largest runoff source in the zone.",
+          "Parking lots and civic plazas can be resurfaced with permeable pavers or concrete. Stores ~25,200 gal per 8,400 sq ft (3.0 gal/ft²) — directly intercepts the largest runoff source in the zone.",
       },
       {
         id: "smart-storage-network",
@@ -271,7 +273,7 @@ const ZONES: ZoneProfile[] = [
         icon: SOL_ICONS["permeable-pavement"],
         feasibility: "limited",
         reason:
-          "Lower impervious cover (61%) and moderate lot density mean permeable pavement has less impact than in fully paved zones. Best applied to new surface parking lots in the redevelopment corridor.",
+          "Lower hard surface cover (61%) and moderate lot density mean permeable pavement has less impact than in fully paved zones. Best applied to new surface parking lots in the redevelopment corridor.",
       },
     ],
   },
@@ -332,7 +334,7 @@ const ZONES: ZoneProfile[] = [
         icon: SOL_ICONS["permeable-pavement"],
         feasibility: "limited",
         reason:
-          "Residential streets have lower impervious cover (65%) than commercial zones, limiting the marginal gain. Best targeted at alley resurfacing where maintenance is simpler and clay subsoil is less of a constraint.",
+          "Residential streets have lower hard surface cover (65%) than commercial zones, limiting the marginal gain. Best targeted at alley resurfacing where maintenance is simpler and clay subsoil is less of a constraint.",
       },
       {
         id: "retention-basin",
@@ -568,6 +570,7 @@ interface FloodZonesPageProps {
 
 export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
   const [selectedZoneId, setSelectedZoneId] = useState(ZONES[0].id);
+  const [zonesCollapsed, setZonesCollapsed] = useState(false);
   const zone = ZONES.find((z) => z.id === selectedZoneId) ?? ZONES[0];
 
   return (
@@ -582,36 +585,108 @@ export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
       {/* ── Zone selector sidebar ──────────────────────────────────── */}
       <div
         style={{
-          width: 230,
+          width: zonesCollapsed ? 36 : 230,
           flexShrink: 0,
           borderRight: "1px solid rgba(0,212,216,0.08)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
+          transition: "width 0.25s cubic-bezier(0.4,0,0.2,1)",
+          position: "relative",
         }}
       >
+        {/* Header + toggle button */}
         <div
           style={{
-            padding: "14px 16px 10px",
+            padding: zonesCollapsed ? "14px 0 10px" : "14px 16px 10px",
             borderBottom: "1px solid rgba(0,212,216,0.07)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: zonesCollapsed ? "center" : "space-between",
+            flexShrink: 0,
           }}
         >
-          <div
+          {!zonesCollapsed && (
+            <div>
+              <div
+                style={{
+                  fontSize: 9,
+                  color: "#3a6080",
+                  fontFamily: "JetBrains Mono, monospace",
+                  letterSpacing: "0.1em",
+                  marginBottom: 2,
+                }}
+              >
+                DOCUMENTED ZONES
+              </div>
+              <div style={{ fontSize: 12, color: "#5b8ab0", fontWeight: 500 }}>
+                {ZONES.length} high-risk areas · floodRiskScore ≥ 70
+              </div>
+            </div>
+          )}
+          <button
+            onClick={() => setZonesCollapsed((c) => !c)}
+            title={zonesCollapsed ? "Expand zone list" : "Collapse zone list"}
             style={{
-              fontSize: 9,
-              color: "#3a6080",
-              fontFamily: "JetBrains Mono, monospace",
-              letterSpacing: "0.1em",
-              marginBottom: 2,
+              background: "none",
+              border: "1px solid rgba(0,212,216,0.15)",
+              borderRadius: 5,
+              cursor: "pointer",
+              padding: "4px 5px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#3a7090",
+              flexShrink: 0,
+              transition: "all 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.color = "#00d4d8";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(0,212,216,0.4)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.color = "#3a7090";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(0,212,216,0.15)";
             }}
           >
-            DOCUMENTED ZONES
-          </div>
-          <div style={{ fontSize: 12, color: "#5b8ab0", fontWeight: 500 }}>
-            {ZONES.length} high-risk areas · floodRiskScore ≥ 70
-          </div>
+            {zonesCollapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
+          </button>
         </div>
 
+        {/* Collapsed: show mini zone pills */}
+        {zonesCollapsed ? (
+          <div style={{ flex: 1, overflowY: "auto", padding: "8px 4px", display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
+            {ZONES.map((z) => {
+              const active = z.id === selectedZoneId;
+              const rc = riskColor(z.riskScore);
+              return (
+                <button
+                  key={z.id}
+                  onClick={() => setSelectedZoneId(z.id)}
+                  title={`${z.name} — Risk ${z.riskScore}`}
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    background: active ? "rgba(0,212,216,0.15)" : "transparent",
+                    border: active ? `1px solid rgba(0,212,216,0.35)` : "1px solid transparent",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 9,
+                    fontFamily: "JetBrains Mono, monospace",
+                    fontWeight: 700,
+                    color: rc,
+                    padding: 0,
+                  }}
+                >
+                  {z.riskScore}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
         <div style={{ flex: 1, overflowY: "auto", padding: "8px 10px" }}>
           {ZONES.map((z) => {
             const active = z.id === selectedZoneId;
@@ -714,6 +789,7 @@ export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
             );
           })}
         </div>
+        )}
       </div>
 
       {/* ── Zone profile ───────────────────────────────────────────── */}
@@ -832,9 +908,8 @@ export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
                 }}
               >
                 <Layers size={11} />
-                {zone.imperviousPct}% Impervious
+                {zone.imperviousPct}% Hard Surface
               </span>
-              <StrategyBadge zoneId={zone.id} />
               {zone.vulnerablePopulation >= 75 && (
                 <span
                   style={{
@@ -865,17 +940,11 @@ export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <StatPill label="Risk Score" value={String(zone.riskScore)} color={riskColor(zone.riskScore)} />
             <StatPill label="Complaints" value={String(zone.complaints)} color="#00a8f3" />
-            <StatPill label="Impervious" value={`${zone.imperviousPct}%`} color="#f59e0b" />
+            <StatPill label="Hard Surface" value={`${zone.imperviousPct}%`} color="#f59e0b" />
             <StatPill label="Available Land" value={`${zone.availableLand}/100`} color={zone.availableLand >= 60 ? "#22c55e" : zone.availableLand >= 40 ? "#f59e0b" : "#ef4444"} />
             <StatPill label="Soil Infiltration" value={`${zone.soilInfiltration}/100`} color={zone.soilInfiltration >= 55 ? "#22c55e" : zone.soilInfiltration >= 38 ? "#f59e0b" : "#ef4444"} />
             <StatPill label="Storage Potential" value={`${zone.storagePotential}/100`} color={zone.storagePotential >= 70 ? "#22c55e" : "#f59e0b"} />
           </div>
-
-          {/* Land/soil-driven strategy */}
-          <StrategyCallout zoneId={zone.id} />
-
-          {/* Tank-led, multi-stage treatment train */}
-          <TreatmentTrain zoneId={zone.id} />
 
           {/* Area description */}
           <div
@@ -922,7 +991,7 @@ export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
                   marginBottom: 10,
                 }}
               >
-                311 COMPLAINT TYPES
+                TOP COMPLAINT TYPES (via 311)
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {zone.complaintTypes.map((ct) => (
@@ -1040,6 +1109,9 @@ export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
             </div>
           </div>
 
+          {/* Treatment Train */}
+          <TreatmentTrain zoneId={zone.id} />
+
           {/* GSI Feasibility matrix */}
           <div>
             <div
@@ -1080,7 +1152,11 @@ export function FloodZonesPage({ onExploreSolution }: FloodZonesPageProps) {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {zone.solutions.map((sol) => {
+              {[...zone.solutions]
+                .sort((a, b) =>
+                  a.id === "smart-storage-network" ? -1 : b.id === "smart-storage-network" ? 1 : 0
+                )
+                .map((sol) => {
                 const cfg = FEASIBILITY_CONFIG[sol.feasibility];
                 const canExplore =
                   sol.feasibility === "recommended" || sol.feasibility === "feasible";

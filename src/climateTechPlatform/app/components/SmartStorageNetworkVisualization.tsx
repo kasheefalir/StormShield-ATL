@@ -1,4 +1,4 @@
-import { useEffect, useRef, type MutableRefObject } from "react";
+import { useEffect, useRef, useState, type MutableRefObject } from "react";
 
 interface Props {
   isPlaying: boolean;
@@ -24,12 +24,14 @@ function rrPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, 
 }
 
 export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineValue }: Props) {
-  const cvRef   = useRef<HTMLCanvasElement>(null);
-  const elRef   = useRef<HTMLDivElement>(null);
-  const rafRef  = useRef(0);
-  const tRef    = useRef(0);
-  const rainRef = useRef<Drop[]>([]);
-  const partRef = useRef<Particle[]>([]);
+  const cvRef       = useRef<HTMLCanvasElement>(null);
+  const elRef       = useRef<HTMLDivElement>(null);
+  const rafRef      = useRef(0);
+  const tRef        = useRef(0);
+  const rainRef     = useRef<Drop[]>([]);
+  const partRef     = useRef<Particle[]>([]);
+  const [showInsight, setShowInsight] = useState(false);
+  const insightRef  = useRef(false);
 
   useEffect(() => {
     const el = elRef.current, cv = cvRef.current;
@@ -99,25 +101,25 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
     // 0.45–0.85: tanks fill (0→45%), sewer drops
     // 0.85–1.0 : full normal
 
-    // Sewer pipe load: rises 0→105% over first 25%, then drops to an HONEST 90% as a distributed
-    // tank network diverts the peak overshoot (~14% of runoff) at the source to reuse/recharge.
-    // 105% → 90% matches card: capture ~400–510k gal of the 2.8M-gal storm, just past capacity → safe headroom.
-    const rawLoad   = Math.min(prog / 0.25, 1) * 1.05;
+    // Sewer pipe load: rises 0→100% (design limit) as storm hits.
+    // Smart valve triggers at 100% — proactively diverts 10,125 gpm (17% of runoff).
+    // 100% - 17 percentage points = 83% — safe operating range with clear headroom.
+    const rawLoad   = Math.min(prog / 0.25, 1) * 1.00;
     const valveAmt  = prog < 0.25 ? 0 : Math.min((prog - 0.25) / 0.20, 1);
-    const sewUtil   = Math.max(rawLoad - valveAmt * 0.15, 0.90 * Math.min(prog / 0.25, 1));
-    const stressed  = sewUtil > 1.0;
+    const sewUtil   = Math.max(rawLoad - valveAmt * 0.17, 0.83 * Math.min(prog / 0.25, 1));
+    const stressed  = rawLoad >= 1.0 && valveAmt < 0.3;
 
     // Tank fill: 0→90% between prog 0.42→0.85 (tanks capture the diverted peak overshoot)
     const tankFill  = prog < 0.42 ? 0 : Math.min((prog - 0.42) / 0.43 * 0.90, 0.90);
     // normalised 0→1 for visuals
     const fillFrac  = tankFill / 0.90;
 
-    // Metrics — honest distributed-network numbers for the South Downtown 1-hr storm:
-    // ~6,500 gal/min peak diversion (= ~400k gal/hr shaved off the peak), de-rated as valve ramps.
-    // overflow ~2,200 gal/min pre-valve (the ~5% overshoot above 100% before the tanks engage).
+    // Metrics — 50-acre / 3.0 in/hr Rational Method model:
+    // 10,125 gpm excess (60,750 - 50,625) intercepted by the tank network.
+    // overflow ~10,125 gpm pre-valve (the 20% overshoot at 120% pipe load), drops to 0 once tanks fully engage.
     const pipeDispPct  = Math.round(sewUtil * 100);
-    const overflowGPM  = valveAmt > 0.88 ? 0 : Math.round(Math.min(prog / 0.25, 1) * 2200 * Math.max(1 - valveAmt * 1.25, 0));
-    const divertedGPM  = Math.round(valveAmt * 6500);
+    const overflowGPM  = valveAmt > 0.88 ? 0 : Math.round(Math.min(prog / 0.25, 1) * 10125 * Math.max(1 - valveAmt * 1.25, 0));
+    const divertedGPM  = Math.round(valveAmt * 10125);
     const storagePct   = Math.round(tankFill * 100);   // out of 90 max → shows actual %
 
     // Active step 1–8
@@ -456,7 +458,7 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
       ctx.beginPath(); ctx.moveTo(pL+6,ghostY); ctx.lineTo(pR-6,ghostY); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = `rgba(239,68,68,${ga*0.82})`; ctx.font = "bold 7px JetBrains Mono, monospace"; ctx.textAlign = "right";
-      ctx.fillText("WITHOUT SMART STORAGE (~105% — OVERFLOW)", pR-8, ghostY-3);
+      ctx.fillText("WITHOUT SMART STORAGE (100% — AT LIMIT)", pR-8, ghostY-3);
       ctx.textAlign = "left";
       ctx.restore();
     }
@@ -612,7 +614,7 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
     ctx.fillStyle = "rgba(0,200,225,0.78)"; ctx.font = "bold 8px JetBrains Mono, monospace"; ctx.textAlign = "center";
     ctx.fillText(`TANK CLUSTER ${idx} / 2`, cx, tankY-13);
     ctx.fillStyle = "rgba(0,170,210,0.52)"; ctx.font = "7px JetBrains Mono, monospace";
-    ctx.fillText("~255k gal · 3 tanks", cx, tankY-4);
+    ctx.fillText("~304k gal · 3 tanks", cx, tankY-4);
     ctx.textAlign = "left";
   }
 
@@ -768,7 +770,7 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
       ctx.beginPath(); ctx.moveTo(arrX-4,ghostY+4); ctx.lineTo(arrX,ghostY); ctx.lineTo(arrX+4,ghostY+4); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(arrX-4,actualY-4); ctx.lineTo(arrX,actualY+2); ctx.lineTo(arrX+4,actualY-4); ctx.stroke();
       ctx.fillStyle = `rgba(0,230,150,${arrA*0.92})`; ctx.font = `bold 8px ${mono}`;
-      ctx.fillText(`${Math.round(valveAmt*14)}%`, arrX+5, (ghostY+actualY)/2+4);
+      ctx.fillText(`${Math.round(valveAmt*17)}%`, arrX+5, (ghostY+actualY)/2+4);
       ctx.fillText("less", arrX+5, (ghostY+actualY)/2+14);
     }
 
@@ -798,50 +800,41 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
       ctx.textAlign = "left";
     }
 
-    // ── Key message ──
-    if (valveAmt > 0.5) {
-      const kmA = Math.min((valveAmt-0.5)*2.5,1);
-      const kmW = Math.min(W*0.44, 320);
-      const kmX = W/2 - kmW/2, kmY = H - 50;
-      ctx.fillStyle = `rgba(4,14,28,${kmA*0.88})`;
-      ctx.beginPath(); rrPath(ctx,kmX,kmY,kmW,38,5); ctx.fill();
-      ctx.strokeStyle = `rgba(0,210,150,${kmA*0.28})`; ctx.lineWidth = 1;
-      ctx.beginPath(); rrPath(ctx,kmX,kmY,kmW,38,5); ctx.stroke();
-      ctx.fillStyle = `rgba(0,215,155,${kmA*0.88})`; ctx.font = `bold 8px ${mono}`; ctx.textAlign = "center";
-      ctx.fillText("KEY INSIGHT", W/2, kmY+13);
-      ctx.fillStyle = `rgba(160,210,230,${kmA*0.82})`; ctx.font = `7px ${mono}`;
-      ctx.fillText("Peak stormwater is captured at the source and diverted OUT of the sewer to reuse & recharge.", W/2, kmY+26);
-      ctx.fillText("It permanently removes ~14% of runoff — pipe drops 105% → 90% (an honest, safe start).", W/2, kmY+36);
-      ctx.textAlign = "left";
+    // ── Key message (rendered as HTML overlay, see JSX below) ──
+    const shouldShow = valveAmt > 0.5;
+    if (shouldShow !== insightRef.current) {
+      insightRef.current = shouldShow;
+      setShowInsight(shouldShow);
     }
 
     // ── Metrics panel (top-right) ──
-    const mx = W-228, my = 26;
+    const panW = 256;
+    const mx = W-panW-8, my = 26;
     ctx.fillStyle = "rgba(4,14,28,0.92)";
-    ctx.beginPath(); rrPath(ctx,mx,my,220,116,5); ctx.fill();
+    ctx.beginPath(); rrPath(ctx,mx,my,panW,116,5); ctx.fill();
     ctx.strokeStyle = "rgba(0,200,220,0.22)"; ctx.lineWidth = 1;
-    ctx.beginPath(); rrPath(ctx,mx,my,220,116,5); ctx.stroke();
+    ctx.beginPath(); rrPath(ctx,mx,my,panW,116,5); ctx.stroke();
     ctx.fillStyle = "rgba(140,215,235,0.82)"; ctx.font = `bold 8px ${mono}`;
     ctx.fillText("SMART STORAGE NETWORK", mx+10, my+13);
 
     const isNormal = valveAmt > 0.70;
     [
-      { label:"PIPE UTILIZATION",  val:`${pipeDispPct}%`,                           bar:Math.min(pipeDispPct/105,1),  col: isStressed && valveAmt<0.5 ? "rgba(239,130,68,0.95)" : "rgba(0,215,245,0.95)" },
-      { label:"OVERFLOW",          val: overflowGPM>0 ? `${overflowGPM.toLocaleString()} gal/min` : "0  ✓", bar:overflowGPM/2200, col: overflowGPM>0 ? "rgba(239,130,68,0.95)" : "rgba(0,225,140,0.92)" },
-      { label:"DIVERTED (~14%)",   val: divertedGPM>0 ? `${divertedGPM.toLocaleString()} gal/min` : "—",    bar:divertedGPM/6500, col:"rgba(0,210,155,0.90)" },
-      { label:"STORAGE UTILIZED",  val:`${storagePct}%`,                            bar:storagePct/90,                col:"rgba(0,200,220,0.90)" },
+      { label:"PIPE UTILIZATION",  val:`${pipeDispPct}%`,                                     bar:Math.min(pipeDispPct/105,1),  col: isStressed && valveAmt<0.5 ? "rgba(239,130,68,0.95)" : "rgba(0,215,245,0.95)" },
+      { label:"OVERFLOW",          val: overflowGPM>0 ? `${overflowGPM.toLocaleString()} gpm` : "0  ✓", bar:overflowGPM/2200, col: overflowGPM>0 ? "rgba(239,130,68,0.95)" : "rgba(0,225,140,0.92)" },
+      { label:"DIVERTED (~17%)",   val: divertedGPM>0 ? `${divertedGPM.toLocaleString()} gpm` : "—",    bar:divertedGPM/10125, col:"rgba(0,210,155,0.90)" },
+      { label:"STORAGE UTILIZED",  val:`${storagePct}%`,                                     bar:storagePct/90,                col:"rgba(0,200,220,0.90)" },
       { label:"FLOOD RISK",        val: isNormal ? "Low  ✓" : isStressed ? "Very High  ⚠" : "High", bar: isNormal ? 0.12 : isStressed ? 0.96 : 0.60, col: isNormal ? "rgba(0,225,140,0.92)" : isStressed ? "rgba(239,130,68,0.95)" : "rgba(245,158,11,0.92)" },
     ].forEach((m,i) => {
       const ry = my+28+i*18;
       ctx.fillStyle = "rgba(80,145,170,0.70)"; ctx.font = `7px ${mono}`; ctx.fillText(m.label, mx+10, ry);
-      const bW=56, bX=mx+154;
+      const bW=52, bX=mx+panW-bW-48;
       ctx.fillStyle = "rgba(0,175,210,0.10)"; ctx.beginPath(); rrPath(ctx,bX,ry-7,bW,5,2); ctx.fill();
       const barFill = Math.max(Math.min(m.bar,1)*bW, m.bar>0?2:0);
       ctx.fillStyle = m.col; ctx.globalAlpha = pulse;
       ctx.beginPath(); rrPath(ctx,bX,ry-7,barFill,5,2); ctx.fill();
       ctx.globalAlpha = 1;
       ctx.fillStyle = m.col; ctx.font = `bold 8px ${mono}`; ctx.textAlign = "right";
-      ctx.fillText(m.val, mx+214, ry); ctx.textAlign = "left";
+      ctx.fillText(m.val, mx+panW-6, ry); ctx.textAlign = "left";
     });
 
     // ── 8-step flow panel (top-left) ──
@@ -851,9 +844,9 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
       { l:"SMART VALVE OPENS",        c: valveAmt>0.1 ? "rgba(0,225,140,0.92)" : "rgba(80,130,155,0.70)" },
       { l:"DIVERTED OUT (REUSE)",     c: valveAmt>0.3 ? "rgba(0,210,155,0.90)" : "rgba(80,130,155,0.70)" },
       { l:"6-TANK NETWORK FILLS",     c: storagePct>3  ? "rgba(0,195,240,0.90)" : "rgba(80,130,155,0.70)" },
-      { l:"SEWER DROPS 105→90%",      c: valveAmt>0.6  ? "rgba(0,200,130,0.90)" : "rgba(80,130,155,0.70)" },
+      { l:"SEWER DROPS 100→83%",      c: valveAmt>0.6  ? "rgba(0,200,130,0.90)" : "rgba(80,130,155,0.70)" },
       { l:"OVERFLOW STOPPED",         c: overflowGPM===0 && prog>0.5 ? "rgba(0,220,150,0.92)" : "rgba(80,130,155,0.70)" },
-      { l:"PIPE AT SAFE 90%",         c: step>=8 ? "rgba(0,225,140,0.95)" : "rgba(80,130,155,0.70)" },
+      { l:"PIPE AT SAFE 83%",         c: step>=8 ? "rgba(0,225,140,0.95)" : "rgba(80,130,155,0.70)" },
     ];
 
     ctx.fillStyle = "rgba(4,14,28,0.88)";
@@ -877,9 +870,33 @@ export function SmartStorageNetworkVisualization({ isPlaying, speed, timelineVal
     void roadTop; void drainX; void collY; void tank1X; void tank2X; void tankW; void H;
   }
 
+  const MONO = "JetBrains Mono, monospace";
+
   return (
-    <div ref={elRef} style={{ width:"100%", height:"100%", position:"relative" }}>
-      <canvas ref={cvRef} style={{ position:"absolute", inset:0, display:"block" }} />
+    <div ref={elRef} style={{ width:"100%", height:"100%", position:"relative", display:"flex", flexDirection:"column" }}>
+      <canvas ref={cvRef} style={{ flex:1, display:"block", width:"100%", minHeight:0 }} />
+      <div
+        style={{
+          flexShrink: 0,
+          padding: "10px 16px",
+          background: "rgba(4,14,28,0.96)",
+          borderTop: "1px solid rgba(0,210,150,0.25)",
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 10,
+          opacity: showInsight ? 1 : 0,
+          transition: "opacity 0.5s ease",
+          pointerEvents: "none",
+        }}
+      >
+        <span style={{ fontSize: 10, fontWeight: 700, color: "#00d296", fontFamily: MONO, whiteSpace: "nowrap", paddingTop: 1 }}>
+          KEY INSIGHT
+        </span>
+        <div style={{ fontSize: 10, color: "#8ec8e0", fontFamily: MONO, lineHeight: 1.55 }}>
+          Peak stormwater is captured at the source and diverted <b style={{ color: "#00d296" }}>OUT</b> of the sewer to reuse &amp; recharge.
+          Valve triggers at 100% capacity — diverts 17% of runoff before the pipe can back up. Pipe drops to 83%, a safe operating margin.
+        </div>
+      </div>
     </div>
   );
 }

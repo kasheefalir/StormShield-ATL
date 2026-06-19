@@ -3,7 +3,6 @@ import {
   Map,
   Layers,
   Leaf,
-  Database,
   Shield,
   ChevronRight,
   ArrowUpRight,
@@ -15,7 +14,6 @@ const navItems = [
   { id: "flood-zones", label: "Flood Zones", icon: Layers, active: true },
   { id: "solutions", label: "Solutions", icon: Leaf },
   { id: "water-management", label: "Water Management", icon: Droplets },
-  { id: "data-sources", label: "Data Sources", icon: Database },
 ];
 
 interface SidebarProps {

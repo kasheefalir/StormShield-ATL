@@ -12,6 +12,7 @@ import {
   holdGallonsForStage,
   spaceForGallons,
   SOLUTION_CAPACITY,
+  MODEL,
   type TrainStage,
 } from "../data/treatmentTrain";
 import { getZoneStrategy } from "../data/zoneStrategy";
@@ -76,10 +77,16 @@ export function TreatmentTrain({ zoneId }: { zoneId: string }) {
   const [t, setT] = useState(0);
   const rafRef = useRef(0);
 
-  // Reset the animation clock when the zone or stage changes.
+  // Reset stage + clock when zone changes.
+  useEffect(() => {
+    setStage(0);
+    setT(0);
+  }, [zoneId]);
+
+  // Reset clock when stage changes manually.
   useEffect(() => {
     setT(0);
-  }, [zoneId, stage]);
+  }, [stage]);
 
   // Drive the per-stage animation timeline (0→100 loop), like the main sim.
   useEffect(() => {
@@ -104,7 +111,8 @@ export function TreatmentTrain({ zoneId }: { zoneId: string }) {
 
   if (!train) return null;
 
-  const current: TrainStage = train.stages[stage];
+  const safeStage = Math.min(stage, train.stages.length - 1);
+  const current: TrainStage = train.stages[safeStage];
   const cap = SOLUTION_CAPACITY[current.solutionId];
   const held = holdGallonsForStage(train, current);
   const footprint = spaceForGallons(current.solutionId, held);
@@ -122,10 +130,15 @@ export function TreatmentTrain({ zoneId }: { zoneId: string }) {
       <div style={{ padding: "14px 18px 10px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <div>
           <div style={{ fontSize: 9, color: "#3a6080", fontFamily: MONO, letterSpacing: "0.12em" }}>
-            TANK-LED TREATMENT TRAIN
+            TANK-LED TREATMENT TRAIN · 50-ACRE CATCHMENT · C=0.90
           </div>
           <div style={{ fontSize: 13, color: "#cfe6f6", fontWeight: 600, marginTop: 2 }}>
-            How the smart tank slows, stores &amp; redirects the {train.interceptGallons.toLocaleString()}-gal peak
+            Intercepting{" "}
+            <span style={{ color: accent }}>{train.interceptFlowGpm.toLocaleString()} gpm</span>
+            {" "}excess — slow, store &amp; redirect
+          </div>
+          <div style={{ fontSize: 10.5, color: "#5a8aaa", fontFamily: MONO, marginTop: 3 }}>
+            Storm: {MODEL.stormFlowGpm.toLocaleString()} gpm · Drain capacity: {MODEL.drainCapacityGpm.toLocaleString()} gpm · Excess: {MODEL.excessFlowGpm.toLocaleString()} gpm → ~{(train.interceptGallons / 1000).toFixed(0)}k gal/hr
           </div>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -202,8 +215,15 @@ export function TreatmentTrain({ zoneId }: { zoneId: string }) {
         </div>
         <p style={{ margin: "0 0 12px", fontSize: 12.5, color: "#8ab0cc", lineHeight: 1.6 }}>{current.caption}</p>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
-          <Metric label="HOLDS" value={`~${held.toLocaleString()} gal`} accent={accent} />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10 }}>
+          <Metric
+            label="FLOW RATE"
+            value={current.role === "hub"
+              ? `${train.interceptFlowGpm.toLocaleString()} gpm`
+              : `~${Math.round((current.sharePercent / 100) * train.interceptFlowGpm).toLocaleString()} gpm`}
+            accent={accent}
+          />
+          <Metric label="VOLUME / HR" value={`~${held.toLocaleString()} gal`} accent={accent} />
           <Metric label="FOOTPRINT" value={footprint} accent={accent} />
           <Metric label="ABSORBS" value={cap?.absorbs ?? "—"} accent={accent} />
           <Metric label="FATE" value={FATE_LABEL[current.fate]} accent={accent} />

@@ -20,51 +20,55 @@ export interface SolutionCapacity {
 }
 
 // Storage densities during a 1-hour cloudburst (infiltration is slow, so what
-// matters is volume held): retention pond 30 gal/ft² (4 ft deep), bioretention
-// ~8 gal/ft² (ponding + media void), tree trench ~34 gal/linear ft (Silva cells),
-// permeable pavement ~3.6 gal/ft² (18" base, 32% void), tanks 7.48 gal/ft³.
+// matters is volume held):
+//   retention pond: 7.48 gal/ft²/ft × 4 ft avg depth = ~30 gal/ft²
+//   bioswale: 9–18" ponding = 5.6–11.2 gal/ft²; ~8 gal/ft² at 12" typical
+//   rain garden: 9" preferred ponding (GA guidance) = 0.75 ft × 7.48 = 5.6 gal/ft²
+//   tree trench: 1.5 gal/cu ft soil × 6 ft wide × 3 ft deep = 27 gal/linear ft
+//   permeable pavement: 6–18" stone, 40% void = 1.5–4.5 gal/ft²; 3.0 at 12" midpoint
+//   tanks: 7.48 gal/cu ft (open vault volume, no void factor)
 export const SOLUTION_CAPACITY: Record<string, SolutionCapacity> = {
   "smart-storage-network": {
     name: "Smart Storage Network",
     vizId: "SmartStorageNetworkVisualization",
     storageDensity: 7.48,
     unit: "cuft",
-    absorbs: "7.5 gal / ft³ (underground vault)",
+    absorbs: "7.48 gal / ft³ (open vault volume)",
   },
   "retention-basin": {
     name: "Retention Basin",
     vizId: "RetentionBasinVisualization",
     storageDensity: 30,
     unit: "sqft",
-    absorbs: "~30 gal / ft² (4 ft deep pond)",
+    absorbs: "~30 gal / ft² (7.48 × 4 ft avg depth)",
   },
   "bioswale": {
     name: "Vegetated Bioswale",
     vizId: "bioswale",
     storageDensity: 8,
     unit: "sqft",
-    absorbs: "~8 gal / ft² (9\" pond + media)",
+    absorbs: "~8 gal / ft² (12\" ponding; range 5.6–11.2 gal/ft²)",
   },
   "rain-garden": {
     name: "Rain Garden",
     vizId: "RainGardenVisualization",
-    storageDensity: 8,
+    storageDensity: 5.6,
     unit: "sqft",
-    absorbs: "~8 gal / ft² (pond + amended soil)",
+    absorbs: "~5.6 gal / ft² (9\" preferred ponding depth)",
   },
   "tree-trench": {
     name: "Silva Cell Tree Trench",
     vizId: "TreeTrenchVisualization",
-    storageDensity: 34,
+    storageDensity: 27,
     unit: "linft",
-    absorbs: "~34 gal / linear ft (Silva cells)",
+    absorbs: "~27 gal / linear ft (1.5 gal/cu ft × 6'×3' cell)",
   },
   "permeable-pavement": {
     name: "Permeable Pavement",
     vizId: "PermeablePavementVisualization",
-    storageDensity: 3.6,
+    storageDensity: 3.0,
     unit: "sqft",
-    absorbs: "~3.6 gal / ft² (18\" stone base)",
+    absorbs: "~3.0 gal / ft² (12\" stone, 40% void; range 1.5–4.5)",
   },
   "reuse-storage": {
     name: "Reuse Storage Tank",
@@ -83,6 +87,19 @@ export const SOLUTION_CAPACITY: Record<string, SolutionCapacity> = {
   },
 };
 
+// ─── Rational Method (50-acre catchment, C=0.90) ─────────────────────────────
+// Storm intensity:  3.0 in/hr  →  Q_storm = 0.90 × 3.0 × 50 = 135 cfs = ~60,750 gpm
+// Drain capacity:   2.5 in/hr  →  Q_drain = 0.90 × 2.5 × 50 = 112.5 cfs = ~50,625 gpm
+// Excess diverted:              →  Q_excess = 22.5 cfs = ~10,125 gpm
+// Over 1 hour:                  →  ~607,500 gal intercepted at peak rate
+
+export const MODEL = {
+  stormFlowGpm: 60_750,
+  drainCapacityGpm: 50_625,
+  excessFlowGpm: 10_125,
+  excessGalPerHour: 607_500,
+} as const;
+
 export type StageFate = "store-redirect" | "infiltrate" | "recharge" | "reuse";
 
 export interface TrainStage {
@@ -95,12 +112,14 @@ export interface TrainStage {
 
 export interface ZoneTrain {
   interceptGallons: number; // the peak overshoot the tank grabs at the pressure points
+  interceptFlowGpm: number; // peak excess flow rate (gpm) — primary metric
   stages: TrainStage[];     // stages[0] is always the smart-tank hub
 }
 
 export const ZONE_TRAIN: Record<string, ZoneTrain> = {
   "south-downtown": {
-    interceptGallons: 510_000,
+    interceptGallons: 607_500,
+    interceptFlowGpm: 10_125,
     stages: [
       {
         solutionId: "smart-storage-network",
@@ -108,7 +127,7 @@ export const ZONE_TRAIN: Record<string, ZoneTrain> = {
         sharePercent: 100,
         fate: "store-redirect",
         caption:
-          "At the storm-drain pressure points a distributed smart-tank network intercepts the ~510k-gal peak overshoot, slows it, and holds it — then meters it out to the destinations below. Dense core: no land for surface green, so the tank does the heavy lifting.",
+          "At the storm-drain pressure points a distributed smart-tank network intercepts ~10,125 gpm of excess flow (the ~22.5 cfs overshoot beyond pipe capacity), slows it, and holds it — then meters it out to the destinations below. Dense core: no land for surface green, so the tank does the heavy lifting.",
       },
       {
         solutionId: "permeable-pavement",
@@ -130,7 +149,8 @@ export const ZONE_TRAIN: Record<string, ZoneTrain> = {
   },
 
   "westside-proctor": {
-    interceptGallons: 430_000,
+    interceptGallons: 607_500,
+    interceptFlowGpm: 10_125,
     stages: [
       {
         solutionId: "smart-storage-network",
@@ -138,7 +158,7 @@ export const ZONE_TRAIN: Record<string, ZoneTrain> = {
         sharePercent: 100,
         fate: "store-redirect",
         caption:
-          "Smart tanks at the curb-inlet pressure points intercept the ~430k-gal peak and slow it. Moderate land and fair soil here mean the tank can then hand most of the water to green GSI.",
+          "Smart tanks at the curb-inlet pressure points intercept ~10,125 gpm of excess runoff and slow it. Moderate land and fair soil here mean the tank can then hand most of the water to green GSI.",
       },
       {
         solutionId: "bioswale",
@@ -157,18 +177,19 @@ export const ZONE_TRAIN: Record<string, ZoneTrain> = {
           "~35% is spread across distributed rain gardens on residential lots, soaking into amended soil over the hours after the peak.",
       },
       {
-        solutionId: "recharge",
+        solutionId: "tree-trench",
         role: "destination",
         sharePercent: 25,
-        fate: "recharge",
+        fate: "infiltrate",
         caption:
-          "The last ~25% is sent to subsurface infiltration galleries for groundwater recharge — returning clean stormwater to the aquifer instead of the sewer.",
+          "~25% is piped from the smart tank into Silva Cell tree trenches under the existing street ROW. Each six-tree cell holds ~3,000 gal in the engineered soil vault — infiltrating slowly while doubling canopy cover and reducing the urban heat island.",
       },
     ],
   },
 
   "old-fourth-ward": {
-    interceptGallons: 330_000,
+    interceptGallons: 607_500,
+    interceptFlowGpm: 10_125,
     stages: [
       {
         solutionId: "smart-storage-network",
@@ -176,7 +197,7 @@ export const ZONE_TRAIN: Record<string, ZoneTrain> = {
         sharePercent: 100,
         fate: "store-redirect",
         caption:
-          "Smart tanks intercept the ~330k-gal peak. With the best soil among at-risk zones and an existing park pond nearby, the tank routes water to genuinely effective green storage.",
+          "Smart tanks intercept ~10,125 gpm of excess flow. With the best soil among at-risk zones and an existing park pond nearby, the tank routes water to genuinely effective green storage.",
       },
       {
         solutionId: "retention-basin",
@@ -198,7 +219,8 @@ export const ZONE_TRAIN: Record<string, ZoneTrain> = {
   },
 
   "vine-city": {
-    interceptGallons: 400_000,
+    interceptGallons: 607_500,
+    interceptFlowGpm: 10_125,
     stages: [
       {
         solutionId: "smart-storage-network",
@@ -206,7 +228,7 @@ export const ZONE_TRAIN: Record<string, ZoneTrain> = {
         sharePercent: 100,
         fate: "store-redirect",
         caption:
-          "Smart tanks intercept the ~400k-gal peak at the inlets. Residential lots give the tank plenty of distributed green destinations to hand water to.",
+          "Smart tanks intercept ~10,125 gpm of excess runoff at the inlets. Residential lots give the tank plenty of distributed green destinations to hand water to.",
       },
       {
         solutionId: "rain-garden",
@@ -236,7 +258,8 @@ export const ZONE_TRAIN: Record<string, ZoneTrain> = {
   },
 
   "airport-south": {
-    interceptGallons: 430_000,
+    interceptGallons: 607_500,
+    interceptFlowGpm: 10_125,
     stages: [
       {
         solutionId: "smart-storage-network",
@@ -244,7 +267,7 @@ export const ZONE_TRAIN: Record<string, ZoneTrain> = {
         sharePercent: 100,
         fate: "store-redirect",
         caption:
-          "Around College Park there's abundant land but compacted clay soil. Smart tanks intercept the ~430k-gal peak, then route it to storage — not infiltration — because the soil won't take it.",
+          "Around College Park there's abundant land but compacted clay soil. Smart tanks intercept ~10,125 gpm of excess flow, then route it to storage — not infiltration — because the soil won't take it.",
       },
       {
         solutionId: "retention-basin",
